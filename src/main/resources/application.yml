@@ -1,0 +1,24 @@
+
+spring:
+  application:
+    name: kookdonge
+  datasource:
+    url: jdbc:mysql://localhost:3306/kookdonge_local
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    defer-datasource-initialization: true
+    open-in-view: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+  sql:
+    init:
+      mode: never
+  cors:
+    allowed-origins: "*"
