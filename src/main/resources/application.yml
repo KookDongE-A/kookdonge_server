@@ -22,3 +22,8 @@ spring:
       mode: never
   cors:
     allowed-origins: "*"
+
+
+auth:
+  jwt:
+    secret-key: "asdojfo"
