@@ -6,6 +6,7 @@ import com.kookdonge.kookdonge_server.auth.infra.jpa.entity.UserEntity;
 import com.kookdonge.kookdonge_server.auth.infra.jpa.repository.UserRepository;
 import com.kookdonge.kookdonge_server.auth.service.client.GoogleClient;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.req.IssueAccessTokenByGrantCodeReq;
+import com.kookdonge.kookdonge_server.auth.service.client.dto.res.GetUserInfoRes;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.res.IssueAccessTokenByGrantCodeRes;
 import com.kookdonge.kookdonge_server.common.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,10 @@ public class UserService {
 
         IssueAccessTokenByGrantCodeRes issueAccessTokenByGrantCodeRes = googleClient.issueAccessTokenByGrantCode(IssueAccessTokenByGrantCodeReq.fromGrantCode(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri));
 
-        String email = "";
+        String accessToken = issueAccessTokenByGrantCodeRes.getAccessToken();
+        GetUserInfoRes userInfo = googleClient.getUserInfo(accessToken);
+
+        String email = userInfo.getEmail();
         if (isUserRegistered(email)){
             throw new CustomException(AuthExceptionCode.ALREADY_REGISTERED_USER);
         }
