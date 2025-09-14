@@ -27,3 +27,9 @@ spring:
 auth:
   jwt:
     secret-key: "asdojfo"
+
+google:
+  client:
+    cleintId: asdf
+    clientSecret: asdf
+    redirectUri: http://localhost:8080/oauth2/callback/google
