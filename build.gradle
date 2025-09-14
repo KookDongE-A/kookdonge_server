@@ -44,7 +44,7 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
 
 	// open feign
-	implementation platform("org.springframework.cloud:spring-cloud-dependencies:2024.0.0")
+	implementation platform("org.springframework.cloud:spring-cloud-dependencies:2025.0.0")
 	implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
 }
 

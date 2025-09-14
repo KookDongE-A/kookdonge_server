@@ -8,6 +8,7 @@ import com.kookdonge.kookdonge_server.auth.service.client.GoogleClient;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.req.IssueAccessTokenByGrantCodeReq;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.res.GetUserInfoRes;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.res.IssueAccessTokenByGrantCodeRes;
+import com.kookdonge.kookdonge_server.auth.service.dto.RegisterUserDTO;
 import com.kookdonge.kookdonge_server.common.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JWT jwt;
 
-    private GoogleClient googleClient;
+    private final GoogleClient googleClient;
 
 
     @Value("${google.client.id}")
@@ -30,12 +31,12 @@ public class UserService {
     @Value("${google.client.redirect-uri}")
     private String googleClientRedirectUri;
 
-    public String registerUser(String googleGrantCode, String phoneNumber, String department, String studentId){
+    public RegisterUserDTO registerUser(String googleGrantCode, String phoneNumber, String department, String studentId){
 
         IssueAccessTokenByGrantCodeRes issueAccessTokenByGrantCodeRes = googleClient.issueAccessTokenByGrantCode(IssueAccessTokenByGrantCodeReq.fromGrantCode(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri));
 
-        String accessToken = issueAccessTokenByGrantCodeRes.getAccessToken();
-        GetUserInfoRes userInfo = googleClient.getUserInfo(accessToken);
+        String googleAccessToken = issueAccessTokenByGrantCodeRes.getAccessToken();
+        GetUserInfoRes userInfo = googleClient.getUserInfo(googleAccessToken);
 
         String email = userInfo.getEmail();
         if (isUserRegistered(email)){
@@ -46,7 +47,16 @@ public class UserService {
         UserEntity savedUserEntity = userRepository.save(newUserEntity);
         String externalUserId = savedUserEntity.getExternalUserId();
 
-        return jwt.generateAccessToken(externalUserId);
+        String accessToken = jwt.generateAccessToken(externalUserId);
+        String refreshToken = jwt.generateRefreshToken(externalUserId);
+
+        return RegisterUserDTO.of(savedUserEntity.getExternalUserId(),
+                savedUserEntity.getEmail(),
+                savedUserEntity.getStudentId(),
+                savedUserEntity.getPhoneNumber(),
+                savedUserEntity.getDepartment(),
+                accessToken,
+                refreshToken);
     }
 
     public boolean isUserRegistered(String email){

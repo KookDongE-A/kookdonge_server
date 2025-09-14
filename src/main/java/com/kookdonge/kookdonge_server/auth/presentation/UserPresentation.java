@@ -1,8 +1,11 @@
 package com.kookdonge.kookdonge_server.auth.presentation;
 
-import com.kookdonge.kookdonge_server.auth.presentation.dto.req.RegisterUserDTO;
+import com.kookdonge.kookdonge_server.auth.presentation.dto.req.RegisterUserReq;
+import com.kookdonge.kookdonge_server.auth.presentation.dto.res.RegisterUserRes;
 import com.kookdonge.kookdonge_server.auth.service.UserService;
+import com.kookdonge.kookdonge_server.auth.service.dto.RegisterUserDTO;
 import com.kookdonge.kookdonge_server.common.RequestDTO;
+import com.kookdonge.kookdonge_server.common.ResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,10 +17,22 @@ public class UserPresentation {
     private final UserService userService;
 
     @PostMapping("/api/users/me")
-    public void registerUser(RequestDTO<RegisterUserDTO> request) {
-        RegisterUserDTO payload = request.getData();
+    public ResponseDTO<RegisterUserRes> registerUser(RequestDTO<RegisterUserReq> request) {
+        RegisterUserReq payload = request.getData();
         String googleGrantCode = payload.getGoogleGrantCode();
+        String department = payload.getDepartment();
+        String phoneNumber = payload.getPhoneNumber();
+        String studentId = payload.getStudentId();
 
-//        userService.registerUser(go)
+        RegisterUserDTO registerUserDTO = userService.registerUser(googleGrantCode, phoneNumber, department, studentId);
+        return ResponseDTO.ok(RegisterUserRes.of(
+                registerUserDTO.getExternalUserId(),
+                registerUserDTO.getEmail(),
+                registerUserDTO.getStudentId(),
+                registerUserDTO.getPhoneNumber(),
+                registerUserDTO.getDepartment(),
+                registerUserDTO.getAccessToken(),
+                registerUserDTO.getRefreshToken()
+        ));
     }
 }

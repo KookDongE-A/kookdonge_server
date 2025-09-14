@@ -27,6 +27,18 @@ public class JWT {
                 .signWith(key)
                 .compact();
     }
+
+    public String generateRefreshToken(String externalUserId) {
+        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
+
+        return Jwts.builder()
+                .subject(externalUserId)
+                .issuer("kookdongeApiServer")
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + expiration * 7)) // Refresh token valid for 7 days
+                .signWith(key)
+                .compact();
+    }
     
     public String extractUserId(String token) {
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes());
