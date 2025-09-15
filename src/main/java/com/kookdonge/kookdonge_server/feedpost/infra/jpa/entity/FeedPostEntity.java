@@ -22,6 +22,13 @@ public class FeedPostEntity extends BaseTimeEntity {
     private String postUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feed_id")
+    @JoinColumn(name = "feed_id", nullable = false)
     private FeedEntity feedEntity;
+
+    public static FeedPostEntity of(String postUrl, FeedEntity feedEntity) {
+        return FeedPostEntity.builder()
+                        .postUrl(postUrl)
+                        .feedEntity(feedEntity)
+                .build();
+    }
 }

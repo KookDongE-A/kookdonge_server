@@ -21,7 +21,14 @@ public class FeedEntity extends BaseTimeEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "club_id")
+    @JoinColumn(name = "club_id", nullable = false)
     private ClubEntity clubEntity;
+
+    public static FeedEntity of(String content, ClubEntity clubEntity) {
+        return FeedEntity.builder()
+                        .content(content)
+                        .clubEntity(clubEntity)
+                .build();
+    }
 
 }
