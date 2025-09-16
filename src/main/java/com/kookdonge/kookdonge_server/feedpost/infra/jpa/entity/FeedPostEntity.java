@@ -1,7 +1,6 @@
 package com.kookdonge.kookdonge_server.feedpost.infra.jpa.entity;
 
 import com.kookdonge.kookdonge_server.common.BaseTimeEntity;
-import com.kookdonge.kookdonge_server.feed.infra.jpa.entity.FeedEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -21,14 +20,14 @@ public class FeedPostEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private String postUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "feed_id", nullable = false)
-    private FeedEntity feedEntity;
+    @NotNull
+    @Column(name = "feed_id", nullable = false)
+    private Long feedId;
 
-    public static FeedPostEntity of(String postUrl, FeedEntity feedEntity) {
+    public static FeedPostEntity ofDB(String postUrl, Long feedId) {
         return FeedPostEntity.builder()
                         .postUrl(postUrl)
-                        .feedEntity(feedEntity)
+                        .feedId(feedId)
                 .build();
     }
 }
