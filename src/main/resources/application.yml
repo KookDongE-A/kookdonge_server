@@ -22,3 +22,14 @@ spring:
       mode: never
   cors:
     allowed-origins: "*"
+
+
+auth:
+  jwt:
+    secret-key: "asdojfo"
+
+google:
+  client:
+    id: asdf
+    secret: asdf
+    redirect-uri: http://localhost:8080/oauth2/callback/google
