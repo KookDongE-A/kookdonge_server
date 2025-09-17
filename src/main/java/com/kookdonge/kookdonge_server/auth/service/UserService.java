@@ -63,6 +63,15 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
+    public String reissueAccessTokenByRefreshToken(String refreshToken){
+        if(!jwt.isTokenValid(refreshToken)){
+            throw new CustomException(AuthExceptionCode.INVALID_REFRESH_TOKEN);
+        }
+
+        String externalUserId = jwt.extractUserId(refreshToken);
+        return jwt.generateAccessToken(externalUserId);
+    }
+
     // AuthInterceptor에서 사용하기 위해서 만듬
     public Long getUserIdByExternalUserId(String externalUserId){
         UserEntity savedUserEntity = userRepository.findByExternalUserId(externalUserId)
