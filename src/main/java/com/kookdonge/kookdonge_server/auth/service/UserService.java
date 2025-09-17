@@ -63,4 +63,11 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
+    // AuthInterceptor에서 사용하기 위해서 만듬
+    public Long getUserIdByExternalUserId(String externalUserId){
+        UserEntity savedUserEntity = userRepository.findByExternalUserId(externalUserId)
+                .orElseThrow(() -> new CustomException(AuthExceptionCode.USER_NOT_FOUND));
+        return savedUserEntity.getUserId();
+    }
+
 }
