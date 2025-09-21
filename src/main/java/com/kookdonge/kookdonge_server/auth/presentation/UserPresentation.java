@@ -1,7 +1,9 @@
 package com.kookdonge.kookdonge_server.auth.presentation;
 
 import com.kookdonge.kookdonge_server.auth.presentation.dto.req.RegisterUserReq;
+import com.kookdonge.kookdonge_server.auth.presentation.dto.req.ReissueAccessTokenReq;
 import com.kookdonge.kookdonge_server.auth.presentation.dto.res.RegisterUserRes;
+import com.kookdonge.kookdonge_server.auth.presentation.dto.res.ReissueAccessTokenRes;
 import com.kookdonge.kookdonge_server.auth.service.UserService;
 import com.kookdonge.kookdonge_server.auth.service.dto.RegisterUserDTO;
 import com.kookdonge.kookdonge_server.common.RequestDTO;
@@ -34,5 +36,15 @@ public class UserPresentation {
                 registerUserDTO.getAccessToken(),
                 registerUserDTO.getRefreshToken()
         ));
+    }
+
+    @PostMapping("/api/auth/reissue")
+    public ResponseDTO<ReissueAccessTokenRes> reissueAccessTokenByRefreshToken(RequestDTO<ReissueAccessTokenReq> request) {
+        ReissueAccessTokenReq data = request.getData();
+        String refreshToken = data.getRefreshToken();
+
+        String reissuedAccessToken = userService.reissueAccessTokenByRefreshToken(refreshToken);
+
+        return ResponseDTO.ok(ReissueAccessTokenRes.of(reissuedAccessToken));
     }
 }
