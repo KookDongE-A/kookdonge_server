@@ -10,6 +10,7 @@ import com.kookdonge.kookdonge_server.common.RequestDTO;
 import com.kookdonge.kookdonge_server.common.ResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class UserPresentation {
     private final UserService userService;
 
     @PostMapping("/api/users/me")
-    public ResponseDTO<RegisterUserRes> registerUser(RequestDTO<RegisterUserReq> request) {
+    public ResponseDTO<RegisterUserRes> registerUser(@RequestBody RequestDTO<RegisterUserReq> request) {
         RegisterUserReq payload = request.getData();
         String googleGrantCode = payload.getGoogleGrantCode();
         String department = payload.getDepartment();

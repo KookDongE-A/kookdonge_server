@@ -13,4 +13,5 @@ public class IssueAccessTokenByGrantCodeRes {
     private String refreshToken;
     @JsonProperty("expires_in")
     private Long expiresIn;
+    private String scope;
 }
