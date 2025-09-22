@@ -9,7 +9,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     defer-datasource-initialization: true
     open-in-view: true
     show-sql: true
@@ -23,10 +23,14 @@ spring:
   cors:
     allowed-origins: "*"
 
+logging:
+  level:
+    com.kookdonge.kookdonge_server: DEBUG
+
 
 auth:
   jwt:
-    secret-key: "asdojfo"
+    secret-key: "kookdonge-super-secret-key-for-jwt-token-generation-with-256-bits-length-minimum-requirement"
 
 google:
   client:

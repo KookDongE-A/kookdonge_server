@@ -5,15 +5,18 @@ import com.kookdonge.kookdonge_server.auth.common.JWT;
 import com.kookdonge.kookdonge_server.auth.infra.jpa.entity.UserEntity;
 import com.kookdonge.kookdonge_server.auth.infra.jpa.repository.UserRepository;
 import com.kookdonge.kookdonge_server.auth.service.client.GoogleClient;
+import com.kookdonge.kookdonge_server.auth.service.client.GoogleOAuthClient;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.req.IssueAccessTokenByGrantCodeReq;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.res.GetUserInfoRes;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.res.IssueAccessTokenByGrantCodeRes;
 import com.kookdonge.kookdonge_server.auth.service.dto.RegisterUserDTO;
 import com.kookdonge.kookdonge_server.common.CustomException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -21,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JWT jwt;
 
+    private final GoogleOAuthClient googleOAuthClient;
     private final GoogleClient googleClient;
 
 
@@ -33,9 +37,10 @@ public class UserService {
 
     public RegisterUserDTO registerUser(String googleGrantCode, String phoneNumber, String department, String studentId){
 
-        IssueAccessTokenByGrantCodeRes issueAccessTokenByGrantCodeRes = googleClient.issueAccessTokenByGrantCode(IssueAccessTokenByGrantCodeReq.fromGrantCode(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri));
+        IssueAccessTokenByGrantCodeRes issueAccessTokenByGrantCodeRes = googleOAuthClient.issueAccessTokenByGrantCode(IssueAccessTokenByGrantCodeReq.fromGrantCode(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri));
+        log.debug("issueAccessTokenByGrantCodeRes: {}", issueAccessTokenByGrantCodeRes.getScope());
 
-        String googleAccessToken = issueAccessTokenByGrantCodeRes.getAccessToken();
+        String googleAccessToken = "Bearer " + issueAccessTokenByGrantCodeRes.getAccessToken();
         GetUserInfoRes userInfo = googleClient.getUserInfo(googleAccessToken);
 
         String email = userInfo.getEmail();
