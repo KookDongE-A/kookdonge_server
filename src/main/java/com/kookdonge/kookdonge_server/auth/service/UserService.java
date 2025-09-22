@@ -83,5 +83,10 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(AuthExceptionCode.USER_NOT_FOUND));
         return savedUserEntity.getUserId();
     }
+    public Long getClubIdByUserId(Long userId){
+        UserEntity savedUserEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(AuthExceptionCode.USER_NOT_FOUND));
+        return savedUserEntity.getClubId();
+    }
 
 }
