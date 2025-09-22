@@ -36,7 +36,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (isLoginRequired(handlerMethod)) {
             String externalUserId = extractExternalUserIdFromToken(request);
             Long userId = userService.getUserIdByExternalUserId(externalUserId);
-            UserInfoStore.set(userId);
+            Long clubId = userService.getClubIdByUserId(userId);
+            UserInfoStore.set(userId, clubId);
         }
 
         return true;

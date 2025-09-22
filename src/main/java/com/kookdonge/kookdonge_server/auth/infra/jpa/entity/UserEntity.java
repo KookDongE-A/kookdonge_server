@@ -45,7 +45,8 @@ public class UserEntity extends BaseTimeEntity {
     @Column(length = 16)
     private String studentId;
 
-    private String clubId;
+    @Column(nullable = true)
+    private Long clubId;
 
     public static UserEntity ofDB(String email, String phoneNumber, String department, String studentId) {
         return UserEntity.builder()

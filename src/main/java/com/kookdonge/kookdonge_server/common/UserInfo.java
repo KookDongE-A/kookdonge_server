@@ -7,4 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor(staticName = "of")
 public class UserInfo {
     private Long userId;
+    private Long clubId;
 }
