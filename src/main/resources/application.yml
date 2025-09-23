@@ -9,7 +9,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     defer-datasource-initialization: true
     open-in-view: true
     show-sql: true
@@ -37,3 +37,12 @@ google:
     id: asdf
     secret: asdf
     redirect-uri: http://localhost:8080/oauth2/callback/google
+
+cloud:
+    aws:
+      s3:
+        bucket: ${AWS_S3_BUCKET:kookdonge-bucket}
+      region: ap-northeast-2
+      credentials:
+        accessKey: ${AWS_ACCESS_KEY:a}
+        secretKey: ${AWS_SECRET_KEY:b}
