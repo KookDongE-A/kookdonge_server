@@ -1,4 +1,4 @@
-package com.kookdonge.kookdonge_server.common;
+package com.kookdonge.kookdonge_server.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

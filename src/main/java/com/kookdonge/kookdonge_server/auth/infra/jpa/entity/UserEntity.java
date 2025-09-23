@@ -1,6 +1,6 @@
 package com.kookdonge.kookdonge_server.auth.infra.jpa.entity;
 
-import com.kookdonge.kookdonge_server.common.BaseTimeEntity;
+import com.kookdonge.kookdonge_server.common.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

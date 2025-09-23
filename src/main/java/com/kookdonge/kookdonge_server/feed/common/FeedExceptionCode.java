@@ -1,6 +1,6 @@
 package com.kookdonge.kookdonge_server.feed.common;
 
-import com.kookdonge.kookdonge_server.common.ExceptionCode;
+import com.kookdonge.kookdonge_server.common.exception.ExceptionCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

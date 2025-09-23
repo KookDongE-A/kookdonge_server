@@ -1,6 +1,6 @@
 package com.kookdonge.kookdonge_server.feedpost.infra.jpa.entity;
 
-import com.kookdonge.kookdonge_server.common.BaseTimeEntity;
+import com.kookdonge.kookdonge_server.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

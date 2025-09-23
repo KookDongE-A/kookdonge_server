@@ -1,7 +1,7 @@
 package com.kookdonge.kookdonge_server.feed.service;
 
-import com.kookdonge.kookdonge_server.common.CustomException;
-import com.kookdonge.kookdonge_server.common.UserInfoStore;
+import com.kookdonge.kookdonge_server.common.exception.CustomException;
+import com.kookdonge.kookdonge_server.common.info.UserInfoStore;
 import com.kookdonge.kookdonge_server.feed.common.FeedExceptionCode;
 import com.kookdonge.kookdonge_server.feed.infra.jpa.entity.FeedEntity;
 import com.kookdonge.kookdonge_server.feed.infra.jpa.repository.FeedRepository;

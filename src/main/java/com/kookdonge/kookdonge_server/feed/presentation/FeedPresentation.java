@@ -1,7 +1,7 @@
 package com.kookdonge.kookdonge_server.feed.presentation;
 
-import com.kookdonge.kookdonge_server.common.RequestDTO;
-import com.kookdonge.kookdonge_server.common.ResponseDTO;
+import com.kookdonge.kookdonge_server.common.dto.RequestDTO;
+import com.kookdonge.kookdonge_server.common.dto.ResponseDTO;
 import com.kookdonge.kookdonge_server.feed.presentation.dto.req.FeedCreatedReq;
 import com.kookdonge.kookdonge_server.feed.presentation.dto.req.PresignedUrlListReq;
 import com.kookdonge.kookdonge_server.feed.presentation.dto.req.PresignedUrlReq;

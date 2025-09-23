@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
-import com.kookdonge.kookdonge_server.common.AwsS3Property;
+import com.kookdonge.kookdonge_server.common.property.AwsS3Property;
 import com.kookdonge.kookdonge_server.feed.service.dto.PresignedUrlDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
