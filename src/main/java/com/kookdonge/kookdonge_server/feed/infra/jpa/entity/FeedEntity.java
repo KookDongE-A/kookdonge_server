@@ -24,10 +24,10 @@ public class FeedEntity extends BaseTimeEntity {
     @Column(name = "club_id", nullable = false)
     private Long clubId;
 
-    public static FeedEntity ofDB(String content, Long clubId) {
+    public static FeedEntity ofDB(Long clubId, String content) {
         return FeedEntity.builder()
-                        .content(content)
                         .clubId(clubId)
+                        .content(content)
                 .build();
     }
 
