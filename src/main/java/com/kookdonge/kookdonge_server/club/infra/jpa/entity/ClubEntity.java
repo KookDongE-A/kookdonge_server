@@ -2,9 +2,12 @@ package com.kookdonge.kookdonge_server.club.infra.jpa.entity;
 
 import com.kookdonge.kookdonge_server.common.BaseTimeEntity;
 import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.Min;
@@ -27,9 +30,11 @@ import java.time.LocalDateTime;
 public class ClubEntity extends BaseTimeEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clubId;
 
     @NotBlank
+    @Column(nullable = false)
     private String clubName;
 
     @NotNull
@@ -37,33 +42,43 @@ public class ClubEntity extends BaseTimeEntity {
     private ClubType clubType;
 
     @NotBlank
+    @Column(nullable = false)
     private String targetGraduate;
 
-    private boolean isLeaveOfAbsenceActive;
+    @NotNull
+    @Column(nullable = false)
+    private Boolean isLeaveOfAbsenceActive;
 
     @NotNull
+    @Column(nullable = false)
     @Min(0)
     private Long weeklyViewCount;
 
     @NotBlank
+    @Column(nullable = false)
     private String leaderName;
 
     @Nullable
     private String clubRoomLocation;
 
     @NotNull
+    @Column(nullable = false)
     private Double weeklyActivityFrequency;
 
     @NotBlank
+    @Column(nullable = false)
     private String regularMeeting;
 
     @NotNull
+    @Column(nullable = false)
     private RecruitmentStatus recruitmentStatus;
 
     @NotNull
+    @Column(nullable = false)
     private LocalDateTime recruitmentStartTime;
 
     @NotNull
+    @Column(nullable = false)
     private LocalDateTime recruitmentEndTime;
 
     @Nullable
@@ -74,6 +89,7 @@ public class ClubEntity extends BaseTimeEntity {
     private String content;
 
     @NotNull
+    @Column(nullable = false)
     @Min(0)
     private Integer count;
 }
