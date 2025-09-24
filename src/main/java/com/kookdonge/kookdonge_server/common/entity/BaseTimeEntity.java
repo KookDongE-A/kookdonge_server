@@ -1,4 +1,4 @@
-package com.kookdonge.kookdonge_server.common;
+package com.kookdonge.kookdonge_server.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

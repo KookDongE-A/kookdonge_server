@@ -1,6 +1,6 @@
 package com.kookdonge.kookdonge_server.feed.infra.jpa.entity;
 
-import com.kookdonge.kookdonge_server.common.BaseTimeEntity;
+import com.kookdonge.kookdonge_server.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -24,10 +24,10 @@ public class FeedEntity extends BaseTimeEntity {
     @Column(name = "club_id", nullable = false)
     private Long clubId;
 
-    public static FeedEntity ofDB(String content, Long clubId) {
+    public static FeedEntity ofDB(Long clubId, String content) {
         return FeedEntity.builder()
-                        .content(content)
                         .clubId(clubId)
+                        .content(content)
                 .build();
     }
 

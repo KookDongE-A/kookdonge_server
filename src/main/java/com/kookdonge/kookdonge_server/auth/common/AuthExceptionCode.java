@@ -1,6 +1,6 @@
 package com.kookdonge.kookdonge_server.auth.common;
 
-import com.kookdonge.kookdonge_server.common.ExceptionCode;
+import com.kookdonge.kookdonge_server.common.exception.ExceptionCode;
 
 public enum AuthExceptionCode implements ExceptionCode {
     ALREADY_REGISTERED_USER("이미 가입된 회원입니다.", 5001),
