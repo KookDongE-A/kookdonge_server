@@ -1,6 +1,6 @@
 package com.kookdonge.kookdonge_server.club.infra.jpa.entity;
 
-import com.kookdonge.kookdonge_server.common.BaseTimeEntity;
+import com.kookdonge.kookdonge_server.common.entity.BaseTimeEntity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

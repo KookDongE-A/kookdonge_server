@@ -9,6 +9,7 @@ import com.kookdonge.kookdonge_server.auth.service.client.GoogleOAuthClient;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.req.IssueAccessTokenByGrantCodeReq;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.res.GetUserInfoRes;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.res.IssueAccessTokenByGrantCodeRes;
+import com.kookdonge.kookdonge_server.auth.service.dto.LoginDTO;
 import com.kookdonge.kookdonge_server.auth.service.dto.RegisterUserDTO;
 import com.kookdonge.kookdonge_server.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -75,6 +76,29 @@ public class UserService {
 
         String externalUserId = jwt.extractUserId(refreshToken);
         return jwt.generateAccessToken(externalUserId);
+    }
+
+    public LoginDTO loginUser(String googleGrantCode){
+        IssueAccessTokenByGrantCodeRes issueAccessTokenByGrantCodeRes = googleOAuthClient.issueAccessTokenByGrantCode(IssueAccessTokenByGrantCodeReq.fromGrantCode(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri));
+
+        String googleAccessToken = "Bearer " + issueAccessTokenByGrantCodeRes.getAccessToken();
+        GetUserInfoRes userInfo = googleClient.getUserInfo(googleAccessToken);
+
+        String email = userInfo.getEmail();
+        UserEntity savedUserEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(AuthExceptionCode.USER_NOT_FOUND));
+
+        String externalUserId = savedUserEntity.getExternalUserId();
+        String accessToken = jwt.generateAccessToken(externalUserId);
+        String refreshToken = jwt.generateRefreshToken(externalUserId);
+
+        return LoginDTO.of(savedUserEntity.getExternalUserId(),
+                savedUserEntity.getEmail(),
+                savedUserEntity.getStudentId(),
+                savedUserEntity.getPhoneNumber(),
+                savedUserEntity.getDepartment(),
+                accessToken,
+                refreshToken);
     }
 
     // AuthInterceptor에서 사용하기 위해서 만듬
