@@ -8,6 +8,8 @@ import com.kookdonge.kookdonge_server.feed.infra.jpa.repository.FeedRepository;
 import com.kookdonge.kookdonge_server.feed.presentation.dto.req.FeedCreatedReq;
 import com.kookdonge.kookdonge_server.feed.presentation.dto.res.ClubFeedListRes;
 import com.kookdonge.kookdonge_server.feed.presentation.dto.res.ClubFeedRes;
+import com.kookdonge.kookdonge_server.feed.service.dto.ClubFeedDto;
+import com.kookdonge.kookdonge_server.feed.service.dto.ClubFeedListDto;
 import com.kookdonge.kookdonge_server.feedpost.infra.jpa.entity.FeedPostEntity;
 import com.kookdonge.kookdonge_server.feedpost.infra.jpa.repository.FeedPostRepository;
 import jakarta.transaction.Transactional;
@@ -39,24 +41,25 @@ public class FeedService {
         });
     }
 
-    public ClubFeedListRes getFeedList(Long clubId) {
+    public ClubFeedListDto getFeedList(Long clubId) {
         List<FeedEntity> feedEntityList = feedRepository.findAllByClubIdOrderByCreatedAtDesc(clubId);
+
         if (feedEntityList.isEmpty()) {
             throw new CustomException(FeedExceptionCode.CLUB_FEED_NOT_FOUND);
         }
 
-        List<ClubFeedRes> clubFeedList = feedEntityList.stream().map(feedEntity -> {
+        List<ClubFeedDto> clubFeedList = feedEntityList.stream().map(feedEntity -> {
             List<String> postUrls = feedPostRepository.findAllByFeedId(feedEntity.getFeedId())
                     .stream()
                     .map(FeedPostEntity::getPostUrl)
                     .toList();
-            return ClubFeedRes.of(feedEntity.getFeedId(), feedEntity.getContent(), postUrls);
+            return ClubFeedDto.of(feedEntity.getFeedId(), feedEntity.getContent(), postUrls);
         }).toList();
 
-        return ClubFeedListRes.of(clubFeedList);
+        return ClubFeedListDto.of(clubFeedList);
     }
 
-    public ClubFeedRes getFeed(Long feedId){
+    public ClubFeedDto getFeed(Long feedId){
         FeedEntity feedEntity = feedRepository.findByFeedId(feedId)
                 .orElseThrow(() -> new CustomException(FeedExceptionCode.FEED_NOT_FOUND));
 
@@ -65,6 +68,6 @@ public class FeedService {
                 .map(FeedPostEntity::getPostUrl)
                 .toList();
 
-        return ClubFeedRes.of(feedEntity.getFeedId(), feedEntity.getContent(), postUrls);
+        return ClubFeedDto.of(feedEntity.getFeedId(), feedEntity.getContent(), postUrls);
     }
 }
