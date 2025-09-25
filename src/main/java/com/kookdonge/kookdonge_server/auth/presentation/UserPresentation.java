@@ -1,18 +1,23 @@
 package com.kookdonge.kookdonge_server.auth.presentation;
 
+import com.kookdonge.kookdonge_server.auth.presentation.dto.req.LoginReq;
 import com.kookdonge.kookdonge_server.auth.presentation.dto.req.RegisterUserReq;
 import com.kookdonge.kookdonge_server.auth.presentation.dto.req.ReissueAccessTokenReq;
+import com.kookdonge.kookdonge_server.auth.presentation.dto.res.LoginRes;
 import com.kookdonge.kookdonge_server.auth.presentation.dto.res.RegisterUserRes;
 import com.kookdonge.kookdonge_server.auth.presentation.dto.res.ReissueAccessTokenRes;
 import com.kookdonge.kookdonge_server.auth.service.UserService;
+import com.kookdonge.kookdonge_server.auth.service.dto.LoginDTO;
 import com.kookdonge.kookdonge_server.auth.service.dto.RegisterUserDTO;
 import com.kookdonge.kookdonge_server.common.dto.RequestDTO;
 import com.kookdonge.kookdonge_server.common.dto.ResponseDTO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name="인증/인가")
 @RequiredArgsConstructor
 @RestController
 public class UserPresentation {
@@ -47,5 +52,23 @@ public class UserPresentation {
         String reissuedAccessToken = userService.reissueAccessTokenByRefreshToken(refreshToken);
 
         return ResponseDTO.ok(ReissueAccessTokenRes.of(reissuedAccessToken));
+    }
+
+    @PostMapping("/api/auth")
+    public ResponseDTO<LoginRes> loginUser(RequestDTO<LoginReq> request) {
+        LoginReq data = request.getData();
+        String googleGrantCode = data.getGoogleGrantCode();
+
+        LoginDTO loginUserDTO = userService.loginUser(googleGrantCode);
+
+        return ResponseDTO.ok(LoginRes.of(
+                loginUserDTO.getExternalUserId(),
+                loginUserDTO.getEmail(),
+                loginUserDTO.getStudentId(),
+                loginUserDTO.getPhoneNumber(),
+                loginUserDTO.getDepartment(),
+                loginUserDTO.getAccessToken(),
+                loginUserDTO.getRefreshToken()
+        ));
     }
 }
