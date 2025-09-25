@@ -1,4 +1,4 @@
-package com.kookdonge.kookdonge_server.common;
+package com.kookdonge.kookdonge_server.common.info;
 
 public class UserInfoStore {
     private static final ThreadLocal<UserInfo> userInfoStore = new ThreadLocal<>();

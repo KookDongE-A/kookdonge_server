@@ -1,5 +1,6 @@
-package com.kookdonge.kookdonge_server.common;
+package com.kookdonge.kookdonge_server.common.dto;
 
+import com.kookdonge.kookdonge_server.common.exception.CustomException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

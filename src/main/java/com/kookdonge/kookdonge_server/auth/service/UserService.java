@@ -10,7 +10,7 @@ import com.kookdonge.kookdonge_server.auth.service.client.dto.req.IssueAccessTok
 import com.kookdonge.kookdonge_server.auth.service.client.dto.res.GetUserInfoRes;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.res.IssueAccessTokenByGrantCodeRes;
 import com.kookdonge.kookdonge_server.auth.service.dto.RegisterUserDTO;
-import com.kookdonge.kookdonge_server.common.CustomException;
+import com.kookdonge.kookdonge_server.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
