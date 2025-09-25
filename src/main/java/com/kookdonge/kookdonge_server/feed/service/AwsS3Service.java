@@ -5,7 +5,10 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.kookdonge.kookdonge_server.common.exception.CustomException;
+import com.kookdonge.kookdonge_server.common.info.UserInfoStore;
 import com.kookdonge.kookdonge_server.common.property.AwsS3Property;
+import com.kookdonge.kookdonge_server.feed.common.FeedExceptionCode;
 import com.kookdonge.kookdonge_server.feed.service.dto.PresignedUrlDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,11 @@ public class AwsS3Service {
 
     // Presigned Url 단건 발급
     public PresignedUrlDTO generatePresignedUrl(String fileName, Long clubId) {
+        Long userClubId = UserInfoStore.getClubId();
+        if (userClubId == null || !userClubId.equals(clubId)) {
+            throw new CustomException(FeedExceptionCode.FILE_ACCESS_DENIED);
+        }
+
         String s3Key = generateKey(fileName, clubId);
 
         GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(
@@ -44,17 +52,22 @@ public class AwsS3Service {
 
     // Presigned Url 다건 발급
     public List<PresignedUrlDTO> generatePresignedUrls(List<String> fileNames, Long clubId) {
+        Long userClubId = UserInfoStore.getClubId();
+        if (userClubId == null || !userClubId.equals(clubId)) {
+            throw new CustomException(FeedExceptionCode.FILE_ACCESS_DENIED);
+        }
         return fileNames.stream()
                 .map(fileName -> generatePresignedUrl(fileName, clubId))
                 .toList();
     }
 
     private String generateKey(String fileName, Long clubId) {
-        String type = fileName.substring(fileName.lastIndexOf('.') + 1);
-        String uuid = UUID.randomUUID().toString();
+        int idx = fileName.lastIndexOf('.');
+        String type = (idx != -1) ? fileName.substring(idx) : "";
+        String uuid = UUID.randomUUID().toString().replace("-", "");
 
         return String.format(
-                "feeds/%s/%s.%s",
+                "club/%s/feeds/%s%s",
                 clubId,
                 uuid,
                 type);

@@ -6,8 +6,6 @@ import com.kookdonge.kookdonge_server.feed.common.FeedExceptionCode;
 import com.kookdonge.kookdonge_server.feed.infra.jpa.entity.FeedEntity;
 import com.kookdonge.kookdonge_server.feed.infra.jpa.repository.FeedRepository;
 import com.kookdonge.kookdonge_server.feed.presentation.dto.req.FeedCreatedReq;
-import com.kookdonge.kookdonge_server.feed.presentation.dto.res.ClubFeedListRes;
-import com.kookdonge.kookdonge_server.feed.presentation.dto.res.ClubFeedRes;
 import com.kookdonge.kookdonge_server.feed.service.dto.ClubFeedDto;
 import com.kookdonge.kookdonge_server.feed.service.dto.ClubFeedListDto;
 import com.kookdonge.kookdonge_server.feedpost.infra.jpa.entity.FeedPostEntity;

@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 @Tag(name = "피드")
 @RequiredArgsConstructor
 @RestController
