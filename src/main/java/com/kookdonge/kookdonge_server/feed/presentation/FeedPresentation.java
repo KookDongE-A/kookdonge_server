@@ -11,6 +11,8 @@ import com.kookdonge.kookdonge_server.feed.presentation.dto.res.PresignedUrlList
 import com.kookdonge.kookdonge_server.feed.presentation.dto.res.PresignedUrlRes;
 import com.kookdonge.kookdonge_server.feed.service.AwsS3Service;
 import com.kookdonge.kookdonge_server.feed.service.FeedService;
+import com.kookdonge.kookdonge_server.feed.service.dto.ClubFeedDto;
+import com.kookdonge.kookdonge_server.feed.service.dto.ClubFeedListDto;
 import com.kookdonge.kookdonge_server.feed.service.dto.PresignedUrlDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,7 +45,13 @@ public class FeedPresentation {
     public ResponseDTO<ClubFeedListRes> getFeedList(
             @RequestParam("club") Long clubId
     ){
-        ClubFeedListRes clubFeedListRes = feedService.getFeedList(clubId);
+        ClubFeedListDto clubFeedListDto = feedService.getFeedList(clubId);
+        ClubFeedListRes clubFeedListRes = ClubFeedListRes.of(
+                clubFeedListDto.getClubFeedList().stream()
+                        .map(clubFeedDto -> ClubFeedRes.of(
+                                clubFeedDto.getFeedId(), clubFeedDto.getContent(), clubFeedDto.getPostUrls()))
+                        .toList()
+        );
         return ResponseDTO.ok(clubFeedListRes);
     }
 
@@ -52,7 +60,12 @@ public class FeedPresentation {
     public ResponseDTO<ClubFeedRes> getFeed(
             @PathVariable Long feedId
     ){
-        return ResponseDTO.ok(feedService.getFeed(feedId));
+        ClubFeedDto clubFeedDto = feedService.getFeed(feedId);
+        return ResponseDTO.ok(ClubFeedRes.of(
+                clubFeedDto.getFeedId(),
+                clubFeedDto.getContent(),
+                clubFeedDto.getPostUrls()
+        ));
     }
 
     @Operation(summary = "피드 이미지 업로드를 위한 Presigned Url 발급")
