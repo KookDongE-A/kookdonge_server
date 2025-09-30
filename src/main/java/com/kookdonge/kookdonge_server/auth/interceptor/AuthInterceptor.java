@@ -2,7 +2,7 @@ package com.kookdonge.kookdonge_server.auth.interceptor;
 
 import com.kookdonge.kookdonge_server.auth.common.AuthExceptionCode;
 import com.kookdonge.kookdonge_server.auth.common.JWT;
-import com.kookdonge.kookdonge_server.auth.service.UserService;
+import com.kookdonge.kookdonge_server.auth.service.UserInfoProvider;
 import com.kookdonge.kookdonge_server.auth.service.annotation.LoginRequired;
 import com.kookdonge.kookdonge_server.common.exception.CustomException;
 import com.kookdonge.kookdonge_server.common.info.UserInfoStore;
@@ -21,7 +21,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class AuthInterceptor implements HandlerInterceptor {
 
     private final JWT jwt;
-    private final UserService userService;
+    private final UserInfoProvider userInfoProvider;
 
     @Override
     public boolean preHandle(
@@ -35,8 +35,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         if (isLoginRequired(handlerMethod)) {
             String externalUserId = extractExternalUserIdFromToken(request);
-            Long userId = userService.getUserIdByExternalUserId(externalUserId);
-            Long clubId = userService.getClubIdByUserId(userId);
+            Long userId = userInfoProvider.getUserIdByExternalUserId(externalUserId);
+            Long clubId = userInfoProvider.getClubIdByUserId(userId);
             UserInfoStore.set(userId, clubId);
         }
 
