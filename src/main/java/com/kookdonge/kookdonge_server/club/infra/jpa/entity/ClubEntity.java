@@ -91,5 +91,5 @@ public class ClubEntity extends BaseTimeEntity {
     @NotNull
     @Column(nullable = false)
     @Min(0)
-    private Integer count;
+    private Integer likeCount;
 }

@@ -1,5 +1,6 @@
 package com.kookdonge.kookdonge_server.feed.presentation;
 
+import com.kookdonge.kookdonge_server.auth.service.annotation.LoginRequired;
 import com.kookdonge.kookdonge_server.common.dto.RequestDTO;
 import com.kookdonge.kookdonge_server.common.dto.ResponseDTO;
 import com.kookdonge.kookdonge_server.feed.presentation.dto.req.FeedCreatedReq;
@@ -32,6 +33,7 @@ public class FeedPresentation {
 
     @Operation(summary = "피드 생성")
     @PostMapping("/api/feeds")
+    @LoginRequired
     public ResponseDTO<Void> createFeed(
             @RequestParam("club") Long clubId,
             @Valid @RequestBody RequestDTO<FeedCreatedReq> feedCreatedReq
@@ -70,6 +72,7 @@ public class FeedPresentation {
 
     @Operation(summary = "피드 이미지 업로드를 위한 Presigned Url 발급")
     @PostMapping("/api/presigned-urls")
+    @LoginRequired
     public ResponseDTO<PresignedUrlListRes> generatePresignedUrls (
             @RequestParam("club") Long clubId,
             @Valid @RequestBody RequestDTO<PresignedUrlListReq> presignedUrlListReq

@@ -19,16 +19,18 @@ public class ClubListRes {
     private Integer like;
     private Integer weeklyView;
     private RecruitmentStatus recruitmentStatus;
+    private Boolean isLikedByMe;
 
-    public static ClubListRes of(ClubEntity club) {
+    public static ClubListRes of(ClubEntity club, Boolean isLikedByMe) {
         return new ClubListRes(
                 club.getClubId(),
                 club.getClubName(),
                 club.getClubProfileImageUrl(),
                 club.getClubType(),
-                club.getCount(),
+                club.getLikeCount(),
                 club.getWeeklyViewCount().intValue(),
-                club.getRecruitmentStatus()
+                club.getRecruitmentStatus(),
+                isLikedByMe
         );
     }
 }
