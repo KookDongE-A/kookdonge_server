@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 @NoArgsConstructor
@@ -92,4 +93,20 @@ public class ClubEntity extends BaseTimeEntity {
     @Column(nullable = false)
     @Min(0)
     private Integer count;
+
+    public void startRecruitment() {
+        this.recruitmentStatus = RecruitmentStatus.RECRUITING;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ClubEntity that = (ClubEntity) o;
+        return Objects.equals(clubId, that.clubId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(clubId);
+    }
 }
