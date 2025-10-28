@@ -1,6 +1,5 @@
 package com.kookdonge.kookdonge_server.waitinglist.infra.jpa.repository
 
-import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubEntity
 import com.kookdonge.kookdonge_server.waitinglist.infra.dto.UserAndClubDTO
 import com.kookdonge.kookdonge_server.waitinglist.infra.jpa.entity.WaitingListEntity
 import org.springframework.data.jpa.repository.JpaRepository
@@ -12,7 +11,7 @@ interface WaitingListRepository : JpaRepository<WaitingListEntity, Long> {
     @Query("select tmp.clubName as clubName, ue.email as userEmail " +
             "from UserEntity ue " +
             "inner join " +
-            "(select ce.clubName, wle.userId " +
+            "(select ce.clubName as clubName, wle.userId as userId " +
             "from ClubEntity ce " +
             "inner join WaitingListEntity wle " +
             "on ce.clubId = wle.clubId " +

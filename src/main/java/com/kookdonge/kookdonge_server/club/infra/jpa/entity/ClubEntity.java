@@ -71,6 +71,7 @@ public class ClubEntity extends BaseTimeEntity {
     private String regularMeeting;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RecruitmentStatus recruitmentStatus;
 

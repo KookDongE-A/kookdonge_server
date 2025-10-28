@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 @Component
 class GmailSender(
     private val javaMailSender: JavaMailSender,
-): MailSender {
+) {
 
     private val senderEmail: String = "kookdonge@kookdonge.co.kr"
 
@@ -102,10 +102,6 @@ class GmailSender(
         } catch (e: Exception){
             throw CustomException(WaitingListExceptionCode.NOT_SEND_WAITINGLIST_NOTIFICATION)
         }
-    }
-
-    override fun send(vararg simpleMessages: SimpleMailMessage?) {
-        TODO("Not yet implemented")
     }
 
 }
