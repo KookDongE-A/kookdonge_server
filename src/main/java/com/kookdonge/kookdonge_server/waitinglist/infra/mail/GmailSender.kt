@@ -3,8 +3,6 @@ package com.kookdonge.kookdonge_server.waitinglist.infra.mail
 import com.kookdonge.kookdonge_server.common.exception.CustomException
 import com.kookdonge.kookdonge_server.waitinglist.common.WaitingListExceptionCode
 import jakarta.mail.internet.MimeMessage
-import org.springframework.mail.MailSender
-import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component

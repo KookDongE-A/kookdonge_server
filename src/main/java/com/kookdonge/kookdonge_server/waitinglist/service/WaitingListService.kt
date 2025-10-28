@@ -1,14 +1,12 @@
 package com.kookdonge.kookdonge_server.waitinglist.service
 
 import com.kookdonge.kookdonge_server.club.common.ClubExceptionCode
-import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubEntity
 import com.kookdonge.kookdonge_server.club.infra.jpa.repository.ClubRepository
 import com.kookdonge.kookdonge_server.common.exception.CustomException
 import com.kookdonge.kookdonge_server.waitinglist.infra.jpa.entity.WaitingListEntity
 import com.kookdonge.kookdonge_server.waitinglist.infra.jpa.repository.WaitingListRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 
 @Service
 class WaitingListService(
