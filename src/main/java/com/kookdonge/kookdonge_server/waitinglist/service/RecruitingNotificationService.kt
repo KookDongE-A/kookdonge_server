@@ -4,8 +4,10 @@ import com.kookdonge.kookdonge_server.auth.infra.jpa.entity.UserEntity
 import com.kookdonge.kookdonge_server.auth.infra.jpa.repository.UserRepository
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubEntity
 import com.kookdonge.kookdonge_server.club.infra.jpa.repository.ClubRepository
+import com.kookdonge.kookdonge_server.waitinglist.infra.dto.UserAndClubDTO
 import com.kookdonge.kookdonge_server.waitinglist.infra.jpa.entity.WaitingListEntity
 import com.kookdonge.kookdonge_server.waitinglist.infra.jpa.repository.WaitingListRepository
+import com.kookdonge.kookdonge_server.waitinglist.infra.mail.GmailSender
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -15,24 +17,18 @@ class RecruitingNotificationService(
     private val waitingListRepository: WaitingListRepository,
     private val clubRepository: ClubRepository,
     private val userRepository: UserRepository,
+    private val gmailSender: GmailSender
 ) {
 
     @Transactional()
     fun notifyClubsStartingRecruitmentToday(){
 
-        val clubEntityList: List<ClubEntity> = findClubsStartingRecruitmentToday();
+        val userAndClubDTOList: List<UserAndClubDTO> = findClubsStartingRecruitmentToday();
+        for (userAndClub in userAndClubDTOList) {
+            val clubName = userAndClub.clubName
+            val userEmail = userAndClub.userEmail
 
-        val userEntityPerClubEntityMap: MutableMap<ClubEntity, List<UserEntity>> = mutableMapOf();
-
-        for (clubEntity in clubEntityList) {
-            clubEntity.startRecruitment();
-
-            val clubId = clubEntity.clubId
-            val userIdList: List<Long> = waitingListRepository.findAllUserIdByClubId(clubId)
-
-            val findAllByUserIdList : List<UserEntity> = userRepository.findAllByUserIdList(userIdList)
-
-            userEntityPerClubEntityMap.put(clubEntity, findAllByUserIdList)
+            gmailSender.sendNotificationEmailToStartingRecruiting(userEmail, clubName)
         }
 
 
@@ -40,10 +36,10 @@ class RecruitingNotificationService(
 
     }
 
-    fun findClubsStartingRecruitmentToday(): List<ClubEntity> {
+    fun findClubsStartingRecruitmentToday(): List<UserAndClubDTO> {
         val today: LocalDateTime = LocalDateTime.now();
-        val clubEntityList: List<ClubEntity> =
+        val userAndClubDTOList: List<UserAndClubDTO> =
             waitingListRepository.findAllBetweenRecruitingStartDateAndRecruitingEndDate(today);
-        return clubEntityList;
+        return userAndClubDTOList;
     }
 }
