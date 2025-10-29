@@ -26,6 +26,7 @@ class WaitingListController(
         return ResponseDTO.ok()
     }
 
+    @LoginRequired
     @DeleteMapping("/api/clubs/{clubId}/waiting")
     fun unsubscribeWaitList(@PathVariable clubId: Long): ResponseDTO<Void> {
 
