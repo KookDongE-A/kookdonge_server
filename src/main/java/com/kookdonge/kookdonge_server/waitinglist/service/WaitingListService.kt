@@ -25,4 +25,9 @@ class WaitingListService(
 
         waitingListRepository.save(waitingListEntity)
     }
+
+    @Transactional
+    fun unsubscribeWaitList(clubId: Long, userId: Long) {
+        waitingListRepository.deleteByClubIdAndUserId(clubId, userId)
+    }
 }
