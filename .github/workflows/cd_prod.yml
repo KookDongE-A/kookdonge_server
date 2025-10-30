@@ -94,8 +94,9 @@ jobs: # 각 Job은 서로 다른 가상머신에서 실행됨
           ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60  -o ServerAliveCountMax=2 ubuntu@${{ secrets.PROD_EC2_IP }} << EOF
           echo "${{ secrets.DOCKERHUB_PASSWORD_PROD }}" | sudo docker login -u ${{ secrets.DOCKERHUB_USERNAME_PROD }} --password-stdin
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME_PROD }}/kookdonge-server:${{ inputs.version }}
-          sudo docker stop \$(sudo docker ps -q) 2>/dev/null || true
-          sudo docker run --name kookdonge-server --rm -v logs:/logs -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME_PROD }}/kookdonge-server:${{ inputs.version }}
-          sudo chmod 777 logs
+          sudo docker stop kookdonge-server 2>/dev/null || true
+          sudo docker rm kookdonge-server 2>/dev/null || true
+          sudo docker run --name kookdonge-server -v logs:/logs -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME_PROD }}/kookdonge-server:${{ inputs.version }}
+          sudo chmod -R 777 logs
           sudo docker system prune -f
           EOF
