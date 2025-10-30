@@ -7,8 +7,9 @@ on:
       version:
         description: 'Version (ex. 0.1.0)'
         required: true
-  push:
-    branches: [ "feature/KDE-55/cd" ]
+        type: string
+#  push:
+#    branches: [ "feature/KDE-55/cd" ]
 
 permissions:
   contents: read
