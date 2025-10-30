@@ -96,7 +96,6 @@ jobs: # 각 Job은 서로 다른 가상머신에서 실행됨
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME_PROD }}/kookdonge-server:${{ inputs.version }}
           sudo docker stop kookdonge-server 2>/dev/null || true
           sudo docker rm kookdonge-server 2>/dev/null || true
-          sudo docker run --name kookdonge-server -v logs:/logs -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME_PROD }}/kookdonge-server:${{ inputs.version }}
-          sudo chmod -R 777 logs
+          sudo docker run --name kookdonge-server -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME_PROD }}/kookdonge-server:${{ inputs.version }}
           sudo docker system prune -f
           EOF
