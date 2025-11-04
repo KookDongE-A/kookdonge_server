@@ -93,7 +93,8 @@ public class ClubEntity extends BaseTimeEntity {
     @NotNull
     @Column(nullable = false)
     @Min(0)
-    private Integer count;
+  
+    private Integer likeCount;
 
     public void startRecruitment() {
         this.recruitmentStatus = RecruitmentStatus.RECRUITING;
@@ -110,4 +111,5 @@ public class ClubEntity extends BaseTimeEntity {
     public int hashCode() {
         return Objects.hashCode(clubId);
     }
+
 }
