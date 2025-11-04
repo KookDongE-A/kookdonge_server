@@ -9,7 +9,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     defer-datasource-initialization: true
     open-in-view: true
     show-sql: true
@@ -22,6 +22,21 @@ spring:
       mode: never
   cors:
     allowed-origins: "*"
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kookdonge@gmail.com
+    password: qwe
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connection timeout: 5000
+          timeout: 5000
+          write timeout: 5000
 
 logging:
   level:
@@ -34,9 +49,9 @@ auth:
 
 google:
   client:
-    id: asdf
-    secret: asdf
-    redirect-uri: http://localhost:8080/oauth2/callback/google
+    id: 1068916533247-f3trlv7kmrfdr911nrbm4o8d2vlmnovh.apps.googleusercontent.com
+    secret: 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
+    redirect-uri: http://localhost:3000/register/register-info
 
 cloud:
     aws:

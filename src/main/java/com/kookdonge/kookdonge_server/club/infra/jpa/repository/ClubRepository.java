@@ -11,4 +11,6 @@ public interface ClubRepository extends JpaRepository<ClubEntity, Long> {
     @Modifying
     @Query("UPDATE ClubEntity c SET c.likeCount = c.likeCount + :delta WHERE c.clubId = :clubId")
     void updateLikeCount(@Param("clubId") Long clubId, @Param("delta") int delta);
+
+    boolean existsByClubId(Long clubId);
 }
