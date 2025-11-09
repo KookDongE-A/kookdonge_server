@@ -1,11 +1,15 @@
 package com.kookdonge.kookdonge_server.club.presentation.dto.res;
 
+import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubCategory;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubEntity;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubType;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.RecruitmentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 @NoArgsConstructor
@@ -14,21 +18,28 @@ public class ClubListRes {
 
     private Long id;
     private String name;
-    private String image;
+    private String logoImage;
+    private String introduction;
     private ClubType type;
-    private Integer like;
-    private Integer weeklyView;
+    private ClubCategory category;
     private RecruitmentStatus recruitmentStatus;
+    private Long dDay;
 
     public static ClubListRes of(ClubEntity club) {
+        Long dDay = null;
+        if (club.getRecruitmentStatus() == RecruitmentStatus.RECRUITING) {
+            dDay = ChronoUnit.DAYS.between(LocalDateTime.now(), club.getRecruitmentEndTime());
+        }
+
         return new ClubListRes(
                 club.getClubId(),
                 club.getClubName(),
                 club.getClubProfileImageUrl(),
+                club.getContent(),
                 club.getClubType(),
-                club.getCount(),
-                club.getWeeklyViewCount().intValue(),
-                club.getRecruitmentStatus()
+                club.getCategory(),
+                club.getRecruitmentStatus(),
+                dDay
         );
     }
 }

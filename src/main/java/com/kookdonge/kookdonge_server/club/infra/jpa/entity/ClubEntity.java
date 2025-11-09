@@ -41,6 +41,11 @@ public class ClubEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ClubType clubType;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ClubCategory category;
+
     @NotBlank
     @Column(nullable = false)
     private String targetGraduate;

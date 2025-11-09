@@ -1,8 +1,10 @@
 package com.kookdonge.kookdonge_server.club.service;
 
 import com.kookdonge.kookdonge_server.club.common.ClubExceptionCode;
+import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubCategory;
+import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubType;
+import com.kookdonge.kookdonge_server.club.infra.jpa.entity.RecruitmentStatus;
 import com.kookdonge.kookdonge_server.club.infra.jpa.repository.ClubRepository;
-import com.kookdonge.kookdonge_server.club.presentation.dto.req.ClubListReq;
 import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubDetailRes;
 import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubListRes;
 import com.kookdonge.kookdonge_server.common.exception.CustomException;
@@ -19,9 +21,25 @@ public class ClubService {
 
     private final ClubRepository clubRepository;
 
-    public Page<ClubListRes> getClubList(ClubListReq request, Pageable pageable) {
-        return clubRepository.findAll(pageable)
-                .map(club -> ClubListRes.of(club));
+    public Page<ClubListRes> getClubList(
+            ClubCategory category,
+            ClubType type,
+            RecruitmentStatus recruitmentStatus,
+            Integer targetGraduate,
+            Integer weeklyActiveFrequency,
+            String query,
+            Pageable pageable
+    ) {
+
+        return clubRepository.findAllClubs(
+                category,
+                type,
+                recruitmentStatus,
+                targetGraduate,
+                weeklyActiveFrequency,
+                query,
+                pageable
+        ).map(ClubListRes::of);
     }
 
     public ClubDetailRes getClubDetail(Long clubId) {
