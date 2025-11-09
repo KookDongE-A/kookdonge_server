@@ -4,6 +4,7 @@ import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubCategory;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubType;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.RecruitmentStatus;
 import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubDetailRes;
+import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubLikeRes;
 import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubListRes;
 import com.kookdonge.kookdonge_server.club.service.ClubService;
 import com.kookdonge.kookdonge_server.common.dto.ResponseDTO;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,8 +43,36 @@ public class ClubPresentation {
     }
 
     @GetMapping("/{clubId}")
-    public ResponseDTO<ClubDetailRes> getClubDetail(@PathVariable Long clubId) {
-        ClubDetailRes clubDetail = clubService.getClubDetail(clubId);
+    public ResponseDTO<ClubDetailRes> getClubDetail(
+            @PathVariable Long clubId,
+            @RequestParam Long userId
+    ) {
+        ClubDetailRes clubDetail = clubService.getClubDetail(clubId, userId);
         return ResponseDTO.ok(clubDetail);
+    }
+
+    @PostMapping("/{clubId}/like")
+    public ResponseDTO<ClubLikeRes> toggleClubLike(
+            @PathVariable Long clubId,
+            @RequestParam Long userId
+    ) {
+        boolean isLiked = clubService.toggleClubLike(clubId, userId);
+        return ResponseDTO.ok(ClubLikeRes.of(isLiked));
+    }
+
+    @GetMapping("/top/weekly-view")
+    public ResponseDTO<Page<ClubListRes>> getTopClubsByWeeklyView(
+            @PageableDefault(size = 10) Pageable pageable
+    ) {
+        Page<ClubListRes> topClubs = clubService.getTopClubsByWeeklyView(pageable);
+        return ResponseDTO.ok(topClubs);
+    }
+
+    @GetMapping("/top/weekly-like")
+    public ResponseDTO<Page<ClubListRes>> getTopClubsByWeeklyLike(
+            @PageableDefault(size = 10) Pageable pageable
+    ) {
+        Page<ClubListRes> topClubs = clubService.getTopClubsByWeeklyLike(pageable);
+        return ResponseDTO.ok(topClubs);
     }
 }
