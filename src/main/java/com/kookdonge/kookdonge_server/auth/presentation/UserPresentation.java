@@ -6,13 +6,19 @@ import com.kookdonge.kookdonge_server.auth.presentation.dto.req.ReissueAccessTok
 import com.kookdonge.kookdonge_server.auth.presentation.dto.res.LoginRes;
 import com.kookdonge.kookdonge_server.auth.presentation.dto.res.RegisterUserRes;
 import com.kookdonge.kookdonge_server.auth.presentation.dto.res.ReissueAccessTokenRes;
+import com.kookdonge.kookdonge_server.auth.presentation.dto.res.UserProfileRes;
 import com.kookdonge.kookdonge_server.auth.service.UserService;
+import com.kookdonge.kookdonge_server.auth.service.annotation.LoginRequired;
 import com.kookdonge.kookdonge_server.auth.service.dto.LoginDTO;
 import com.kookdonge.kookdonge_server.auth.service.dto.RegisterUserDTO;
+import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubListRes;
 import com.kookdonge.kookdonge_server.common.dto.RequestDTO;
 import com.kookdonge.kookdonge_server.common.dto.ResponseDTO;
+import com.kookdonge.kookdonge_server.common.info.UserInfoStore;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +30,7 @@ public class UserPresentation {
 
     private final UserService userService;
 
+    @Operation(summary = "회원가입")
     @PostMapping("/api/users/me")
     public ResponseDTO<RegisterUserRes> registerUser(@RequestBody RequestDTO<RegisterUserReq> request) {
         RegisterUserReq payload = request.getData();
@@ -42,6 +49,40 @@ public class UserPresentation {
                 registerUserDTO.getAccessToken(),
                 registerUserDTO.getRefreshToken()
         ));
+    }
+
+    @Operation(summary = "내 프로필 조회")
+    @GetMapping("/api/users/me")
+    @LoginRequired
+    public ResponseDTO<UserProfileRes> getMyProfile() {
+        Long userId = UserInfoStore.getUserId();
+        // TODO: 구현 필요 - userService.getUserProfile(userId) 메서드 추가
+        return ResponseDTO.ok(UserProfileRes.of(
+                userId,
+                "user@example.com",
+                "20201234",
+                "010-0000-0000",
+                "소프트웨어학과",
+                null
+        ));
+    }
+
+    @Operation(summary = "내가 좋아요 누른 동아리 목록 조회")
+    @GetMapping("/api/users/me/liked-clubs")
+    @LoginRequired
+    public ResponseDTO<java.util.List<ClubListRes>> getMyLikedClubs() {
+        Long userId = UserInfoStore.getUserId();
+        // TODO: 구현 필요 - userService.getLikedClubs(userId) 또는 clubService.getClubsLikedByUser(userId) 메서드 추가
+        return ResponseDTO.ok(java.util.Collections.emptyList());
+    }
+
+    @Operation(summary = "내가 알림 신청한 동아리 목록 조회")
+    @GetMapping("/api/users/me/waitinglist-clubs")
+    @LoginRequired
+    public ResponseDTO<java.util.List<ClubListRes>> getMyWaitinglistClubs() {
+        Long userId = UserInfoStore.getUserId();
+        // TODO: 구현 필요 - userService.getWaitinglistClubs(userId) 또는 waitinglistService.getClubsByUserId(userId) 메서드 추가
+        return ResponseDTO.ok(java.util.Collections.emptyList());
     }
 
     @PostMapping("/api/auth/reissue")

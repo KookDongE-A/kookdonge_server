@@ -1,6 +1,5 @@
 package com.kookdonge.kookdonge_server.club.presentation.dto.res;
 
-import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubCategory;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubEntity;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubType;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.RecruitmentStatus;
@@ -24,6 +23,7 @@ public class ClubListRes {
     private ClubCategory category;
     private RecruitmentStatus recruitmentStatus;
     private Long dDay;
+    private Boolean isLikedByMe;
 
     public static ClubListRes of(ClubEntity club) {
         Long dDay = null;
@@ -39,7 +39,9 @@ public class ClubListRes {
                 club.getClubType(),
                 club.getCategory(),
                 club.getRecruitmentStatus(),
-                dDay
+                dDay,
+                club.getRecruitmentStatus(),
+                isLikedByMe
         );
     }
 }
