@@ -129,7 +129,7 @@ public class ClubRepositoryImpl implements ClubRepositoryCustom {
 
             switch (sortType) {
                 case LATEST -> orders.add(club.createdAt.desc());
-                case POPULARITY -> orders.add(isAsc ? club.count.asc() : club.count.desc());
+                case POPULARITY -> orders.add(isAsc ? club.totalLikeCount.asc() : club.totalLikeCount.desc());
                 case DEADLINE -> {
                     orders.add(getRecruitmentStatusOrder(club).asc());
                     orders.add(club.recruitmentEndTime.asc());

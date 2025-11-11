@@ -1,5 +1,6 @@
 package com.kookdonge.kookdonge_server.club.presentation.dto.res;
 
+import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubCategory;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubEntity;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubType;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.RecruitmentStatus;
@@ -40,8 +41,7 @@ public class ClubListRes {
                 club.getCategory(),
                 club.getRecruitmentStatus(),
                 dDay,
-                club.getRecruitmentStatus(),
-                isLikedByMe
+                false
         );
     }
 }
