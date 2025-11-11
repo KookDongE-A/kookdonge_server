@@ -9,8 +9,12 @@ import org.springframework.data.repository.query.Param;
 public interface ClubRepository extends JpaRepository<ClubEntity, Long>, ClubRepositoryCustom {
 
     @Modifying
-    @Query("UPDATE ClubEntity c SET c.likeCount = c.likeCount + :delta WHERE c.clubId = :clubId")
-    void updateLikeCount(@Param("clubId") Long clubId, @Param("delta") int delta);
+    @Query("UPDATE ClubEntity c SET c.totalViewCount = c.totalViewCount + :count WHERE c.clubId = :clubId")
+    void incrementTotalViewCount(@Param("clubId") Long clubId, @Param("count") Long count);
+
+    @Modifying
+    @Query("UPDATE ClubEntity c SET c.totalLikeCount = c.totalLikeCount + :count WHERE c.clubId = :clubId")
+    void incrementTotalLikeCount(@Param("clubId") Long clubId, @Param("count") Long count);
 
     boolean existsByClubId(Long clubId);
 }
