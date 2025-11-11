@@ -9,6 +9,7 @@ import com.kookdonge.kookdonge_server.club.infra.jpa.repository.ClubLikeReposito
 import com.kookdonge.kookdonge_server.club.infra.jpa.repository.ClubRepository;
 import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubDetailRes;
 import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubListRes;
+import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubRankingRes;
 import com.kookdonge.kookdonge_server.common.exception.CustomException;
 import java.util.List;
 import java.util.Map.Entry;
@@ -54,28 +55,40 @@ public class ClubService {
     public ClubDetailRes getClubDetail(Long clubId, Long userId) {
         clubStatsService.incrementViewCount(clubId, userId);
 
-        return clubRepository.findById(clubId)
-                .map(ClubDetailRes::of)
+        ClubEntity club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new CustomException(ClubExceptionCode.CLUB_NOT_FOUND));
+
+        Boolean isLiked = checkIfLiked(clubId, userId);
+
+        return ClubDetailRes.of(club, isLiked);
     }
 
-    public Page<ClubListRes> getTopClubsByWeeklyView(Pageable pageable) {
+    public Page<ClubRankingRes> getTopClubsByWeeklyView(Pageable pageable) {
         List<Entry<Long, Long>> topClubs = clubStatsService.getTopClubsByWeeklyView(pageable.getPageSize());
-        return buildClubListPage(topClubs, pageable);
+        return buildClubRankingPage(topClubs, pageable);
     }
 
-    public Page<ClubListRes> getTopClubsByWeeklyLike(Pageable pageable) {
+    public Page<ClubRankingRes> getTopClubsByWeeklyLike(Pageable pageable) {
         List<Entry<Long, Long>> topClubs = clubStatsService.getTopClubsByWeeklyLike(pageable.getPageSize());
-        return buildClubListPage(topClubs, pageable);
+        return buildClubRankingPage(topClubs, pageable);
     }
 
-    private Page<ClubListRes> buildClubListPage(List<Entry<Long, Long>> topClubs, Pageable pageable) {
+    private Page<ClubRankingRes> buildClubRankingPage(List<Entry<Long, Long>> topClubs, Pageable pageable) {
+        Long userId = UserInfoStore.getUserId();
+
         List<Long> clubIds = topClubs.stream()
                 .map(Entry::getKey)
                 .collect(Collectors.toList());
 
-        List<ClubListRes> clubs = clubRepository.findAllById(clubIds).stream()
-                .map(ClubListRes::of)
+        List<ClubEntity> clubEntities = clubRepository.findAllById(clubIds);
+
+        List<ClubRankingRes> clubs = clubEntities.stream()
+                .map(club -> {
+                    Long clubId = club.getClubId();
+                    Long weeklyViewGrowth = clubStatsService.getWeeklyViewCount(clubId);
+                    Long weeklyLikeGrowth = clubStatsService.getWeeklyLikeCount(clubId);
+                    return ClubRankingRes.of(club, checkIfLiked(clubId, userId), weeklyViewGrowth, weeklyLikeGrowth);
+                })
                 .collect(Collectors.toList());
 
         return new PageImpl<>(clubs, pageable, clubs.size());
