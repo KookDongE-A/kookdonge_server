@@ -9,6 +9,12 @@ public class UserInfoStore {
     public static Long getUserId(){
         return userInfoStore.get().getUserId();
     }
+
+    public static Long getUserIdOrNull() {
+        UserInfo userInfo = userInfoStore.get();
+        return userInfo != null ? userInfo.getUserId() : null;
+    }
+
     public static Long getClubId(){
         return userInfoStore.get().getClubId();
     }
