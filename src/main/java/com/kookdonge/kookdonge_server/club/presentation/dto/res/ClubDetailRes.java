@@ -25,8 +25,8 @@ public class ClubDetailRes {
     private RecruitmentStatus recruitmentStatus;
     private LocalDateTime recruitmentStartDate;
     private LocalDateTime recruitmentEndDate;
-    private Integer like;
-    private Integer weeklyView;
+    private Long totalLikeCount;
+    private Long totalViewCount;
     private Boolean isLikedByMe;
 
     public static ClubDetailRes of(ClubEntity club, Boolean isLikedByMe) {
@@ -42,8 +42,8 @@ public class ClubDetailRes {
                 club.getRecruitmentStatus(),
                 club.getRecruitmentStartTime(),
                 club.getRecruitmentEndTime(),
-                club.getLikeCount(),
-                club.getWeeklyViewCount().intValue(),
+                club.getTotalLikeCount(),
+                club.getTotalViewCount(),
                 isLikedByMe
         );
     }
