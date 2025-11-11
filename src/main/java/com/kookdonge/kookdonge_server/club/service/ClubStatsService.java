@@ -1,8 +1,10 @@
 package com.kookdonge.kookdonge_server.club.service;
 
+import com.kookdonge.kookdonge_server.club.infra.jpa.repository.ClubRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.AbstractMap;
 import java.util.Comparator;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class ClubStatsService {
 
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ClubRepository clubRepository;
 
     private static final String VIEW_KEY_PREFIX = "club:view:";
     private static final String LIKE_KEY_PREFIX = "club:like:";
@@ -86,6 +89,28 @@ public class ClubStatsService {
                 .sorted(Comparator.comparing(Map.Entry<Long, Long>::getValue).reversed())
                 .limit(limit)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void saveWeeklyStatsToDatabase() {
+        Map<Object, Object> weeklyViews = redisTemplate.opsForHash().entries(WEEKLY_VIEW_KEY);
+        Map<Object, Object> weeklyLikes = redisTemplate.opsForHash().entries(WEEKLY_LIKE_KEY);
+
+        weeklyViews.forEach((clubId, count) -> {
+            Long id = Long.parseLong(clubId.toString());
+            Long viewCount = Long.parseLong(count.toString());
+            if (viewCount > 0) {
+                clubRepository.incrementTotalViewCount(id, viewCount);
+            }
+        });
+
+        weeklyLikes.forEach((clubId, count) -> {
+            Long id = Long.parseLong(clubId.toString());
+            Long likeCount = Long.parseLong(count.toString());
+            if (likeCount > 0) {
+                clubRepository.incrementTotalLikeCount(id, likeCount);
+            }
+        });
     }
 
     public void resetWeeklyStats() {
