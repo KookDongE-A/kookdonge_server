@@ -58,7 +58,7 @@ public class ClubEntity extends BaseTimeEntity {
     @NotNull
     @Column(nullable = false)
     @Min(0)
-    private Long weeklyViewCount;
+    private Long totalViewCount;
 
     @NotBlank
     @Column(nullable = false)
@@ -98,8 +98,7 @@ public class ClubEntity extends BaseTimeEntity {
     @NotNull
     @Column(nullable = false)
     @Min(0)
-  
-    private Integer likeCount;
+    private Long totalLikeCount;
 
     public void startRecruitment() {
         this.recruitmentStatus = RecruitmentStatus.RECRUITING;
