@@ -52,6 +52,7 @@ public class ClubService {
         ).map(ClubListRes::of);
     }
 
+    @Transactional
     public ClubDetailRes getClubDetail(Long clubId, Long userId) {
         clubStatsService.incrementViewCount(clubId, userId);
 
