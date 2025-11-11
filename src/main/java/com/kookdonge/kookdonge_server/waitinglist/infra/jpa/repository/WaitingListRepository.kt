@@ -1,5 +1,6 @@
 package com.kookdonge.kookdonge_server.waitinglist.infra.jpa.repository
 
+import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubEntity
 import com.kookdonge.kookdonge_server.common.dto.ResponseDTO
 import com.kookdonge.kookdonge_server.waitinglist.infra.dto.UserAndClubDTO
 import com.kookdonge.kookdonge_server.waitinglist.infra.jpa.entity.WaitingListEntity
@@ -35,5 +36,13 @@ interface WaitingListRepository : JpaRepository<WaitingListEntity, Long> {
 
     @Query("delete from WaitingListEntity where clubId = :clubId and userId = :userId")
     fun deleteByClubIdAndUserId(clubId: Long, userId: Long): Boolean
+
+    @Query("select ce " +
+            "from ClubEntity ce " +
+            "where ce.clubId in " +
+            "(select wle.clubId " +
+            "from WaitingListEntity wle " +
+            "where wle.userId = :userId)")
+    fun getClubsAllByUserId(userId: Long): List<ClubEntity>
 
 }

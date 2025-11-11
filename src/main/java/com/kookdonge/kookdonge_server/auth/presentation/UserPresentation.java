@@ -71,15 +71,6 @@ public class UserPresentation {
         return ResponseDTO.ok(java.util.Collections.emptyList());
     }
 
-    @Operation(summary = "내가 알림 신청한 동아리 목록 조회")
-    @GetMapping("/api/users/me/waitinglist-clubs")
-    @LoginRequired
-    public ResponseDTO<java.util.List<ClubListRes>> getMyWaitinglistClubs() {
-        Long userId = UserInfoStore.getUserId();
-        // TODO: 구현 필요 - userService.getWaitinglistClubs(userId) 또는 waitinglistService.getClubsByUserId(userId) 메서드 추가
-        return ResponseDTO.ok(java.util.Collections.emptyList());
-    }
-
     @PostMapping("/api/auth/reissue")
     public ResponseDTO<ReissueAccessTokenRes> reissueAccessTokenByRefreshToken(RequestDTO<ReissueAccessTokenReq> request) {
         ReissueAccessTokenReq data = request.getData();
