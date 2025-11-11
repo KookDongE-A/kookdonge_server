@@ -16,9 +16,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("*")
+                .allowedOrigins("https://api.kookdonge.co.kr")
                 .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP method
-                .allowCredentials(true); // 쿠키 인증 요청 허용
+                .allowCredentials(true);
     }
 
     @Override
