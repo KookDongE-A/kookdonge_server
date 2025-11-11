@@ -28,8 +28,12 @@ public class QuestionAnswerService {
     public QuestionAnswerRes createQuestion(Long clubId, QuestionCreateReq request) {
         validateClubExists(clubId);
 
+        Long userId = UserInfoStore.getUserId();
+
         QuestionsAndAnswersEntity entity = QuestionsAndAnswersEntity.of(
                 clubId,
+                userId,
+                request.getUserName(),
                 request.getQuestion()
         );
 
