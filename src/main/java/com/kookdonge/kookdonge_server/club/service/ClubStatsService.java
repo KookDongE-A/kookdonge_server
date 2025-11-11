@@ -26,6 +26,7 @@ public class ClubStatsService {
     private static final String WEEKLY_LIKE_KEY = "club:weekly:like";
     private static final long VIEW_DUPLICATE_PREVENT_HOURS = 1;
 
+    @Transactional
     public boolean incrementViewCount(Long clubId, Long userId) {
         String viewKey = VIEW_KEY_PREFIX + clubId + ":" + userId;
 
@@ -33,6 +34,7 @@ public class ClubStatsService {
 
         if (Boolean.TRUE.equals(isViewed)) {
             redisTemplate.opsForHash().increment(WEEKLY_VIEW_KEY, clubId.toString(), 1);
+            clubRepository.incrementTotalViewCount(clubId, 1L);
             return true;
         }
         return false;
@@ -93,16 +95,7 @@ public class ClubStatsService {
 
     @Transactional
     public void saveWeeklyStatsToDatabase() {
-        Map<Object, Object> weeklyViews = redisTemplate.opsForHash().entries(WEEKLY_VIEW_KEY);
         Map<Object, Object> weeklyLikes = redisTemplate.opsForHash().entries(WEEKLY_LIKE_KEY);
-
-        weeklyViews.forEach((clubId, count) -> {
-            Long id = Long.parseLong(clubId.toString());
-            Long viewCount = Long.parseLong(count.toString());
-            if (viewCount > 0) {
-                clubRepository.incrementTotalViewCount(id, viewCount);
-            }
-        });
 
         weeklyLikes.forEach((clubId, count) -> {
             Long id = Long.parseLong(clubId.toString());
