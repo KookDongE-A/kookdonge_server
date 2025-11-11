@@ -38,7 +38,7 @@ public class ClubRankingRes {
                 club.getClubId(),
                 club.getClubName(),
                 club.getClubProfileImageUrl(),
-                club.getContent(),
+                club.getDescription(),
                 club.getClubType(),
                 club.getCategory(),
                 club.getRecruitmentStatus(),
