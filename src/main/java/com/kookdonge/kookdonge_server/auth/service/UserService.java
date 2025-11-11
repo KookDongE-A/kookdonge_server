@@ -4,6 +4,7 @@ import com.kookdonge.kookdonge_server.auth.common.AuthExceptionCode;
 import com.kookdonge.kookdonge_server.auth.common.JWT;
 import com.kookdonge.kookdonge_server.auth.infra.jpa.entity.UserEntity;
 import com.kookdonge.kookdonge_server.auth.infra.jpa.repository.UserRepository;
+import com.kookdonge.kookdonge_server.auth.presentation.dto.res.UserProfileRes;
 import com.kookdonge.kookdonge_server.auth.service.client.GoogleClient;
 import com.kookdonge.kookdonge_server.auth.service.client.GoogleOAuthClient;
 import com.kookdonge.kookdonge_server.auth.service.client.dto.req.IssueAccessTokenByGrantCodeReq;
@@ -99,6 +100,20 @@ public class UserService {
                 savedUserEntity.getDepartment(),
                 accessToken,
                 refreshToken);
+    }
+
+    public UserProfileRes getUserInfo(Long userId){
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(AuthExceptionCode.USER_NOT_FOUND));
+
+        return UserProfileRes.of(
+                userEntity.getExternalUserId(),
+                userEntity.getEmail(),
+                userEntity.getStudentId(),
+                userEntity.getPhoneNumber(),
+                userEntity.getDepartment(),
+                userEntity.getClubId()
+        );
     }
 
 }

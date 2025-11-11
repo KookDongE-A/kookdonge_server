@@ -72,11 +72,34 @@ public class ClubRepositoryImpl implements ClubRepositoryCustom {
             String query
     ) {
 
-        return eqCategory(club, category).and(eqClubType(club, type))
+        return BooleanExpressionBuilder.create()
+                .and(eqCategory(club, category))
+                .and(eqClubType(club, type))
                 .and(eqRecruitmentStatus(club, recruitmentStatus))
                 .and(containsTargetGraduate(club, targetGraduate))
                 .and(goeWeeklyActivityFrequency(club, weeklyActiveFrequency))
-                .and(containsQuery(club, query));
+                .and(containsQuery(club, query))
+                .build();
+    }
+
+    private static class BooleanExpressionBuilder {
+        private BooleanExpression result;
+
+        public static BooleanExpressionBuilder create() {
+            return new BooleanExpressionBuilder();
+        }
+
+        public BooleanExpressionBuilder and(BooleanExpression expression) {
+            if (expression == null) {
+                return this;
+            }
+            result = result == null ? expression : result.and(expression);
+            return this;
+        }
+
+        public BooleanExpression build() {
+            return result;
+        }
     }
 
     private BooleanExpression eqCategory(QClubEntity club, ClubCategory category) {
