@@ -93,7 +93,7 @@ public class ClubEntity extends BaseTimeEntity {
 
     @Lob
     @Nullable
-    private String content;
+    private String description;
 
     @NotNull
     @Column(nullable = false)

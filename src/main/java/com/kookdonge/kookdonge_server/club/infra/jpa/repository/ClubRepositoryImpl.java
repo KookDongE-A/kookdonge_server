@@ -111,7 +111,7 @@ public class ClubRepositoryImpl implements ClubRepositoryCustom {
         if (query == null || query.isBlank()) {
             return null;
         }
-        return club.clubName.containsIgnoreCase(query).or(club.content.containsIgnoreCase(query));
+        return club.clubName.containsIgnoreCase(query).or(club.description.containsIgnoreCase(query));
     }
 
     private List<OrderSpecifier<?>> getOrderSpecifiers(Sort sort, QClubEntity club) {
