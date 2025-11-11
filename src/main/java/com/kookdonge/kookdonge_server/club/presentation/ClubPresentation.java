@@ -52,10 +52,9 @@ public class ClubPresentation {
     @Operation(summary = "동아리 상세 조회")
     @GetMapping("/{clubId}")
     public ResponseDTO<ClubDetailRes> getClubDetail(
-            @PathVariable Long clubId,
-            @RequestParam(required = false) Long userId
+            @PathVariable Long clubId
     ) {
-        ClubDetailRes clubDetail = clubService.getClubDetail(clubId, userId);
+        ClubDetailRes clubDetail = clubService.getClubDetail(clubId);
         return ResponseDTO.ok(clubDetail);
     }
 

@@ -53,7 +53,8 @@ public class ClubService {
     }
 
     @Transactional
-    public ClubDetailRes getClubDetail(Long clubId, Long userId) {
+    public ClubDetailRes getClubDetail(Long clubId) {
+        Long userId = UserInfoStore.getUserIdOrNull();
         clubStatsService.incrementViewCount(clubId, userId);
 
         ClubEntity club = clubRepository.findById(clubId)
@@ -75,7 +76,7 @@ public class ClubService {
     }
 
     private Page<ClubRankingRes> buildClubRankingPage(List<Entry<Long, Long>> topClubs, Pageable pageable) {
-        Long userId = UserInfoStore.getUserId();
+        Long userId = UserInfoStore.getUserIdOrNull();
 
         List<Long> clubIds = topClubs.stream()
                 .map(Entry::getKey)
