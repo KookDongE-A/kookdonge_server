@@ -1,5 +1,6 @@
 package com.kookdonge.kookdonge_server.club.presentation.dto.res;
 
+import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubCategory;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubEntity;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubType;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.RecruitmentStatus;
@@ -28,6 +29,9 @@ public class ClubDetailRes {
     private Long totalLikeCount;
     private Long totalViewCount;
     private Boolean isLikedByMe;
+    private String description;
+    private ClubCategory category;
+    private Boolean allowLeaveOfAbsence;
 
     public static ClubDetailRes of(ClubEntity club, Boolean isLikedByMe) {
         return new ClubDetailRes(
@@ -44,7 +48,10 @@ public class ClubDetailRes {
                 club.getRecruitmentEndTime(),
                 club.getTotalLikeCount(),
                 club.getTotalViewCount(),
-                isLikedByMe
+                isLikedByMe,
+                club.getDescription(),
+                club.getCategory(),
+                club.getIsLeaveOfAbsenceActive()
         );
     }
 }
