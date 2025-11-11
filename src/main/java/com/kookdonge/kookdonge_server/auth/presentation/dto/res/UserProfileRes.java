@@ -10,7 +10,7 @@ import lombok.Getter;
 public class UserProfileRes {
 
     @Schema(description = "사용자 ID", example = "1")
-    private Long userId;
+    private String externalUserId;
 
     @Schema(description = "이메일", example = "user@kookmin.ac.kr")
     private String email;

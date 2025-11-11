@@ -56,15 +56,10 @@ public class UserPresentation {
     @LoginRequired
     public ResponseDTO<UserProfileRes> getMyProfile() {
         Long userId = UserInfoStore.getUserId();
-        // TODO: 구현 필요 - userService.getUserProfile(userId) 메서드 추가
-        return ResponseDTO.ok(UserProfileRes.of(
-                userId,
-                "user@example.com",
-                "20201234",
-                "010-0000-0000",
-                "소프트웨어학과",
-                null
-        ));
+
+        UserProfileRes userInfo = userService.getUserInfo(userId);
+
+        return ResponseDTO.ok(userInfo);
     }
 
     @Operation(summary = "내가 좋아요 누른 동아리 목록 조회")
