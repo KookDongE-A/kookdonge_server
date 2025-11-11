@@ -42,6 +42,11 @@ public class ClubEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ClubType clubType;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ClubCategory category;
+
     @NotBlank
     @Column(nullable = false)
     private String targetGraduate;
@@ -53,7 +58,7 @@ public class ClubEntity extends BaseTimeEntity {
     @NotNull
     @Column(nullable = false)
     @Min(0)
-    private Long weeklyViewCount;
+    private Long totalViewCount;
 
     @NotBlank
     @Column(nullable = false)
@@ -88,13 +93,12 @@ public class ClubEntity extends BaseTimeEntity {
 
     @Lob
     @Nullable
-    private String content;
+    private String description;
 
     @NotNull
     @Column(nullable = false)
     @Min(0)
-  
-    private Integer likeCount;
+    private Long totalLikeCount;
 
     public void startRecruitment() {
         this.recruitmentStatus = RecruitmentStatus.RECRUITING;

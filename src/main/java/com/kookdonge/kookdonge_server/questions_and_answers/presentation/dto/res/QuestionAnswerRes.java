@@ -16,13 +16,17 @@ public class QuestionAnswerRes {
     private LocalDateTime createdAt;
     private String question;
     private String answer;
+    private Long userId;
+    private String userName;
 
     public static QuestionAnswerRes of(QuestionsAndAnswersEntity entity) {
         return new QuestionAnswerRes(
                 entity.getQuestionsAndAnswersId(),
                 entity.getCreatedAt(),
                 entity.getQuestion(),
-                entity.getAnswer()
+                entity.getAnswer(),
+                entity.getUserId(),
+                entity.getUserName()
         );
     }
 }

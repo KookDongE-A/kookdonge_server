@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClubListRes {
+public class ClubRankingRes {
 
     private Long id;
     private String name;
@@ -25,14 +25,16 @@ public class ClubListRes {
     private RecruitmentStatus recruitmentStatus;
     private Long dDay;
     private Boolean isLikedByMe;
+    private Long weeklyViewGrowth;
+    private Long weeklyLikeGrowth;
 
-    public static ClubListRes of(ClubEntity club) {
+    public static ClubRankingRes of(ClubEntity club, Boolean isLikedByMe, Long weeklyViewGrowth, Long weeklyLikeGrowth) {
         Long dDay = null;
         if (club.getRecruitmentStatus() == RecruitmentStatus.RECRUITING) {
             dDay = ChronoUnit.DAYS.between(LocalDateTime.now(), club.getRecruitmentEndTime());
         }
 
-        return new ClubListRes(
+        return new ClubRankingRes(
                 club.getClubId(),
                 club.getClubName(),
                 club.getClubProfileImageUrl(),
@@ -41,7 +43,9 @@ public class ClubListRes {
                 club.getCategory(),
                 club.getRecruitmentStatus(),
                 dDay,
-                false
+                isLikedByMe,
+                weeklyViewGrowth,
+                weeklyLikeGrowth
         );
     }
 }

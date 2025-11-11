@@ -28,7 +28,7 @@ public class ClubLikeService {
 
         ClubLikeEntity clubLike = ClubLikeEntity.of(clubId, userId);
         clubLikeRepository.save(clubLike);
-        clubRepository.updateLikeCount(clubId, 1);
+        clubRepository.incrementTotalLikeCount(clubId, 1L);
     }
 
     @Transactional
@@ -42,6 +42,6 @@ public class ClubLikeService {
         }
 
         clubLikeRepository.deleteByClubLikeId_ClubIdAndClubLikeId_UserId(clubId, userId);
-        clubRepository.updateLikeCount(clubId, -1);
+        clubRepository.incrementTotalLikeCount(clubId, -1L);
     }
 }
