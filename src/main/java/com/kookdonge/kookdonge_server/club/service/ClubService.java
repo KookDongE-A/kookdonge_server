@@ -96,6 +96,17 @@ public class ClubService {
         return new PageImpl<>(clubs, pageable, clubs.size());
     }
 
+    public List<ClubListRes> getClubsLikedByUser(Long userId) {
+        List<ClubEntity> clubs = clubLikeRepository.findAllByUserId(userId).stream()
+                .map(clubLike -> clubRepository.findById(clubLike.getClubLikeId().getClubId())
+                        .orElseThrow(() -> new CustomException(ClubExceptionCode.CLUB_NOT_FOUND)))
+                .collect(Collectors.toList());
+
+        return clubs.stream()
+                .map(ClubListRes::of)
+                .collect(Collectors.toList());
+    }
+
     private boolean checkIfLiked(Long clubId, Long userId) {
       if (userId == null) {
         return false;
