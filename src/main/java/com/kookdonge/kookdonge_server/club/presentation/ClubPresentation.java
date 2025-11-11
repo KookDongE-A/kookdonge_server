@@ -53,7 +53,7 @@ public class ClubPresentation {
     @GetMapping("/{clubId}")
     public ResponseDTO<ClubDetailRes> getClubDetail(
             @PathVariable Long clubId,
-            @RequestParam Long userId
+            @RequestParam(required = false) Long userId
     ) {
         ClubDetailRes clubDetail = clubService.getClubDetail(clubId, userId);
         return ResponseDTO.ok(clubDetail);
