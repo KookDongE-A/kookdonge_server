@@ -25,6 +25,14 @@ public class QuestionsAndAnswersEntity extends BaseTimeEntity {
     @Column(name = "club_id", nullable = false)
     private Long clubId;
 
+    @NotNull
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    @NotBlank
+    @Column(nullable = false)
+    private String userName;
+
     @NotBlank
     @Column(nullable = false)
     private String question;
@@ -32,8 +40,8 @@ public class QuestionsAndAnswersEntity extends BaseTimeEntity {
     @Column
     private String answer;
 
-    public static QuestionsAndAnswersEntity of(Long clubId, String question) {
-        return new QuestionsAndAnswersEntity(null, clubId, question, null);
+    public static QuestionsAndAnswersEntity of(Long clubId, Long userId, String userName, String question) {
+        return new QuestionsAndAnswersEntity(null, clubId, userId, userName, question, null);
     }
 
     public void updateAnswer(String answer) {
