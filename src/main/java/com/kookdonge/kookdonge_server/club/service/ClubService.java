@@ -11,6 +11,8 @@ import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubDetailRes;
 import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubListRes;
 import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubRankingRes;
 import com.kookdonge.kookdonge_server.common.exception.CustomException;
+import com.kookdonge.kookdonge_server.common.util.WebUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -53,9 +55,12 @@ public class ClubService {
     }
 
     @Transactional
-    public ClubDetailRes getClubDetail(Long clubId) {
+    public ClubDetailRes getClubDetail(Long clubId, HttpServletRequest request) {
         Long userId = UserInfoStore.getUserIdOrNull();
-        clubStatsService.incrementViewCount(clubId, userId);
+        String ipAddress = WebUtils.getClientIp(request);
+        String userAgent = WebUtils.getUserAgent(request);
+
+        clubStatsService.incrementViewCount(clubId, userId, ipAddress, userAgent);
 
         ClubEntity club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new CustomException(ClubExceptionCode.CLUB_NOT_FOUND));

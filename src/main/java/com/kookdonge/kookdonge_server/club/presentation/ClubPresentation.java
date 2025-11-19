@@ -13,6 +13,7 @@ import com.kookdonge.kookdonge_server.common.dto.ResponseDTO;
 import com.kookdonge.kookdonge_server.common.info.UserInfoStore;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,9 +53,10 @@ public class ClubPresentation {
     @Operation(summary = "동아리 상세 조회")
     @GetMapping("/{clubId}")
     public ResponseDTO<ClubDetailRes> getClubDetail(
-            @PathVariable Long clubId
+            @PathVariable Long clubId,
+            HttpServletRequest request
     ) {
-        ClubDetailRes clubDetail = clubService.getClubDetail(clubId);
+        ClubDetailRes clubDetail = clubService.getClubDetail(clubId, request);
         return ResponseDTO.ok(clubDetail);
     }
 
