@@ -13,6 +13,10 @@ import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubRankingRes;
 import com.kookdonge.kookdonge_server.common.exception.CustomException;
 import com.kookdonge.kookdonge_server.common.util.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -76,12 +80,20 @@ public class ClubService {
     }
 
     public Page<ClubRankingRes> getTopClubsByWeeklyLike(Pageable pageable) {
-        List<Entry<Long, Long>> topClubs = clubStatsService.getTopClubsByWeeklyLike(pageable.getPageSize());
+        LocalDateTime weekStart = getStartOfWeek();
+        List<ClubLikeRepository.ClubLikeCount> topClubCounts = clubLikeRepository.findTopClubsByLikesSince(weekStart);
+
+        List<Entry<Long, Long>> topClubs = topClubCounts.stream()
+                .limit(pageable.getPageSize())
+                .map(count -> new AbstractMap.SimpleEntry<>(count.getClubId(), count.getLikeCount()))
+                .collect(Collectors.toList());
+
         return buildClubRankingPage(topClubs, pageable);
     }
 
     private Page<ClubRankingRes> buildClubRankingPage(List<Entry<Long, Long>> topClubs, Pageable pageable) {
         Long userId = UserInfoStore.getUserIdOrNull();
+        LocalDateTime weekStart = getStartOfWeek();
 
         List<Long> clubIds = topClubs.stream()
                 .map(Entry::getKey)
@@ -93,12 +105,21 @@ public class ClubService {
                 .map(club -> {
                     Long clubId = club.getClubId();
                     Long weeklyViewGrowth = clubStatsService.getWeeklyViewCount(clubId);
-                    Long weeklyLikeGrowth = clubStatsService.getWeeklyLikeCount(clubId);
+                    Long weeklyLikeGrowth = clubLikeRepository.countByClubIdSince(clubId, weekStart);
                     return ClubRankingRes.of(club, checkIfLiked(clubId, userId), weeklyViewGrowth, weeklyLikeGrowth);
                 })
                 .collect(Collectors.toList());
 
         return new PageImpl<>(clubs, pageable, clubs.size());
+    }
+
+    private LocalDateTime getStartOfWeek() {
+        return LocalDateTime.now()
+                .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+                .withHour(0)
+                .withMinute(0)
+                .withSecond(0)
+                .withNano(0);
     }
 
     private boolean checkIfLiked(Long clubId, Long userId) {

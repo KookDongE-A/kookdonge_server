@@ -22,7 +22,6 @@ public class ClubStatsService {
 
     private static final String VIEW_KEY_PREFIX = "club:view:";
     private static final String WEEKLY_VIEW_KEY = "club:weekly:view";
-    private static final String WEEKLY_LIKE_KEY = "club:weekly:like";
     private static final long VIEW_DUPLICATE_PREVENT_HOURS = 1;
 
     @Transactional
@@ -60,21 +59,8 @@ public class ClubStatsService {
         return count != null ? Long.parseLong(count.toString()) : 0L;
     }
 
-    public Long getWeeklyLikeCount(Long clubId) {
-        Object count = redisTemplate.opsForHash().get(WEEKLY_LIKE_KEY, clubId.toString());
-        return count != null ? Long.parseLong(count.toString()) : 0L;
-    }
-
     public List<Map.Entry<Long, Long>> getTopClubsByWeeklyView(int limit) {
-        return getTopClubsByKey(WEEKLY_VIEW_KEY, limit);
-    }
-
-    public List<Map.Entry<Long, Long>> getTopClubsByWeeklyLike(int limit) {
-        return getTopClubsByKey(WEEKLY_LIKE_KEY, limit);
-    }
-
-    private List<Map.Entry<Long, Long>> getTopClubsByKey(String redisKey, int limit) {
-        Map<Object, Object> counts = redisTemplate.opsForHash().entries(redisKey);
+        Map<Object, Object> counts = redisTemplate.opsForHash().entries(WEEKLY_VIEW_KEY);
 
         return counts.entrySet().stream()
                 .map(entry -> new AbstractMap.SimpleEntry<>(
@@ -86,21 +72,7 @@ public class ClubStatsService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public void saveWeeklyStatsToDatabase() {
-        Map<Object, Object> weeklyLikes = redisTemplate.opsForHash().entries(WEEKLY_LIKE_KEY);
-
-        weeklyLikes.forEach((clubId, count) -> {
-            Long id = Long.parseLong(clubId.toString());
-            Long likeCount = Long.parseLong(count.toString());
-            if (likeCount > 0) {
-                clubRepository.incrementTotalLikeCount(id, likeCount);
-            }
-        });
-    }
-
     public void resetWeeklyStats() {
         redisTemplate.delete(WEEKLY_VIEW_KEY);
-        redisTemplate.delete(WEEKLY_LIKE_KEY);
     }
 }
