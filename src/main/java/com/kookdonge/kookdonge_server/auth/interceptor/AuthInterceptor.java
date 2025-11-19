@@ -33,14 +33,33 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        if (isLoginRequired(handlerMethod)) {
-            String externalUserId = extractExternalUserIdFromToken(request);
+        String token = extractTokenIfExists(request);
+        boolean hasValidToken = token != null && jwt.isTokenValid(token);
+
+        // 토큰이 있으면 UserInfoStore 설정
+        if (hasValidToken) {
+            String externalUserId = jwt.extractUserId(token);
             Long userId = userInfoProvider.getUserIdByExternalUserId(externalUserId);
             Long clubId = userInfoProvider.getClubIdByUserId(userId);
             UserInfoStore.set(userId, clubId);
         }
 
+        // @LoginRequired인데 토큰이 없거나 유효하지 않으면 예외
+        if (isLoginRequired(handlerMethod) && !hasValidToken) {
+            throw new CustomException(AuthExceptionCode.NOT_FOUND_AUTH_HEADER);
+        }
+
         return true;
+    }
+
+    private String extractTokenIfExists(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        }
+
+        return null;
     }
 
     private boolean isLoginNotRequired(HandlerMethod handlerMethod) {
