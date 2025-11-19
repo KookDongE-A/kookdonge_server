@@ -15,15 +15,12 @@ public class WeeklyViewCountResetScheduler {
 
     @Scheduled(cron = "0 0 0 * * MON")
     public void resetWeeklyStats() {
-        log.info("주간 조회수/좋아요 집계 초기화 시작");
+        log.info("주간 조회수 집계 초기화 시작");
         try {
-            clubStatsService.saveWeeklyStatsToDatabase();
-            log.info("주간 통계를 데이터베이스에 저장 완료");
-
             clubStatsService.resetWeeklyStats();
-            log.info("주간 조회수/좋아요 집계 초기화 완료");
+            log.info("주간 조회수 집계 초기화 완료");
         } catch (Exception e) {
-            log.error("주간 조회수/좋아요 집계 초기화 실패", e);
+            log.error("주간 조회수 집계 초기화 실패", e);
         }
     }
 }
