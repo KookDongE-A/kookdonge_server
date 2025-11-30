@@ -76,7 +76,7 @@ public class UserPresentation {
     }
 
     @PostMapping("/api/auth/reissue")
-    public ResponseDTO<ReissueAccessTokenRes> reissueAccessTokenByRefreshToken(RequestDTO<ReissueAccessTokenReq> request) {
+    public ResponseDTO<ReissueAccessTokenRes> reissueAccessTokenByRefreshToken(@RequestBody RequestDTO<ReissueAccessTokenReq> request) {
         ReissueAccessTokenReq data = request.getData();
         String refreshToken = data.getRefreshToken();
 
@@ -86,7 +86,7 @@ public class UserPresentation {
     }
 
     @PostMapping("/api/auth")
-    public ResponseDTO<LoginRes> loginUser(RequestDTO<LoginReq> request) {
+    public ResponseDTO<LoginRes> loginUser(@RequestBody RequestDTO<LoginReq> request) {
         LoginReq data = request.getData();
         String googleGrantCode = data.getGoogleGrantCode();
 
