@@ -91,8 +91,8 @@ public class ClubEntity extends BaseTimeEntity {
     @Nullable
     private String clubProfileImageUrl;
 
-    @Lob
     @Nullable
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @NotNull
