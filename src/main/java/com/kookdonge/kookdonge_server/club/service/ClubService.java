@@ -128,4 +128,20 @@ public class ClubService {
       }
       return clubLikeRepository.existsByClubLikeId_ClubIdAndClubLikeId_UserId(clubId, userId);
     }
+
+    public List<ClubListRes> getClubsLikedByUser(Long userId) {
+        if (userId == null) {
+            return List.of();
+        }
+        List<Long> likedClubIds = clubLikeRepository.findByClubLikeId_UserId(userId)
+                .stream()
+                .map(clubLike -> clubLike.getClubLikeId().getClubId())
+                .collect(Collectors.toList());
+
+        List<ClubEntity> likedClubs = clubRepository.findAllById(likedClubIds);
+
+        return likedClubs.stream()
+                .map(club -> ClubListRes.of(club, true))
+                .collect(Collectors.toList());
+    }
 }

@@ -26,6 +26,9 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+      timeout: 60000
+      ssl:
+        enabled: true
   mail:
     host: smtp.gmail.com
     port: 587
@@ -55,7 +58,7 @@ google:
   client:
     id: 1068916533247-f3trlv7kmrfdr911nrbm4o8d2vlmnovh.apps.googleusercontent.com
     secret: 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
-    redirect-uri: http://localhost:3000/register/register-info
+    redirect-uri: http://localhost:3000/register/
 
 cloud:
     aws:
