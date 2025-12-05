@@ -21,14 +21,24 @@ public class ClubStatsService {
     private final ClubRepository clubRepository;
 
     private static final String VIEW_KEY_PREFIX = "club:view:";
-    private static final String LIKE_KEY_PREFIX = "club:like:";
     private static final String WEEKLY_VIEW_KEY = "club:weekly:view";
-    private static final String WEEKLY_LIKE_KEY = "club:weekly:like";
     private static final long VIEW_DUPLICATE_PREVENT_HOURS = 1;
 
     @Transactional
-    public boolean incrementViewCount(Long clubId, Long userId) {
-        String viewKey = VIEW_KEY_PREFIX + clubId + ":" + userId;
+    public boolean incrementViewCount(Long clubId, Long userId, String ipAddress, String userAgent) {
+        String identifier;
+
+        if (userId != null) {
+            // 로그인 유저: userId 사용
+            identifier = "user:" + userId;
+        } else {
+            // 비로그인 유저: IP + User-Agent 해시 사용
+            String fingerprint = ipAddress + ":" + userAgent;
+            String hash = generateHash(fingerprint);
+            identifier = "guest:" + hash;
+        }
+
+        String viewKey = VIEW_KEY_PREFIX + clubId + ":" + identifier;
 
         Boolean isViewed = redisTemplate.opsForValue().setIfAbsent(viewKey, "1", VIEW_DUPLICATE_PREVENT_HOURS, TimeUnit.HOURS);
 
@@ -40,26 +50,8 @@ public class ClubStatsService {
         return false;
     }
 
-    public boolean toggleLike(Long clubId, Long userId) {
-        String likeKey = LIKE_KEY_PREFIX + clubId;
-        String userIdStr = userId.toString();
-
-        Boolean isMember = redisTemplate.opsForSet().isMember(likeKey, userIdStr);
-
-        if (Boolean.TRUE.equals(isMember)) {
-            redisTemplate.opsForSet().remove(likeKey, userIdStr);
-            redisTemplate.opsForHash().increment(WEEKLY_LIKE_KEY, clubId.toString(), -1);
-            return false;
-        } else {
-            redisTemplate.opsForSet().add(likeKey, userIdStr);
-            redisTemplate.opsForHash().increment(WEEKLY_LIKE_KEY, clubId.toString(), 1);
-            return true;
-        }
-    }
-
-    public boolean isLiked(Long clubId, Long userId) {
-        String likeKey = LIKE_KEY_PREFIX + clubId;
-        return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(likeKey, userId.toString()));
+    private String generateHash(String input) {
+        return org.springframework.util.DigestUtils.md5DigestAsHex(input.getBytes(java.nio.charset.StandardCharsets.UTF_8));
     }
 
     public Long getWeeklyViewCount(Long clubId) {
@@ -67,21 +59,8 @@ public class ClubStatsService {
         return count != null ? Long.parseLong(count.toString()) : 0L;
     }
 
-    public Long getWeeklyLikeCount(Long clubId) {
-        Object count = redisTemplate.opsForHash().get(WEEKLY_LIKE_KEY, clubId.toString());
-        return count != null ? Long.parseLong(count.toString()) : 0L;
-    }
-
     public List<Map.Entry<Long, Long>> getTopClubsByWeeklyView(int limit) {
-        return getTopClubsByKey(WEEKLY_VIEW_KEY, limit);
-    }
-
-    public List<Map.Entry<Long, Long>> getTopClubsByWeeklyLike(int limit) {
-        return getTopClubsByKey(WEEKLY_LIKE_KEY, limit);
-    }
-
-    private List<Map.Entry<Long, Long>> getTopClubsByKey(String redisKey, int limit) {
-        Map<Object, Object> counts = redisTemplate.opsForHash().entries(redisKey);
+        Map<Object, Object> counts = redisTemplate.opsForHash().entries(WEEKLY_VIEW_KEY);
 
         return counts.entrySet().stream()
                 .map(entry -> new AbstractMap.SimpleEntry<>(
@@ -93,21 +72,7 @@ public class ClubStatsService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public void saveWeeklyStatsToDatabase() {
-        Map<Object, Object> weeklyLikes = redisTemplate.opsForHash().entries(WEEKLY_LIKE_KEY);
-
-        weeklyLikes.forEach((clubId, count) -> {
-            Long id = Long.parseLong(clubId.toString());
-            Long likeCount = Long.parseLong(count.toString());
-            if (likeCount > 0) {
-                clubRepository.incrementTotalLikeCount(id, likeCount);
-            }
-        });
-    }
-
     public void resetWeeklyStats() {
         redisTemplate.delete(WEEKLY_VIEW_KEY);
-        redisTemplate.delete(WEEKLY_LIKE_KEY);
     }
 }
