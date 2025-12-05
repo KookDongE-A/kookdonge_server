@@ -40,7 +40,7 @@ public class ClubService {
             String query,
             Pageable pageable
     ) {
-
+        Long userId = UserInfoStore.getUserIdOrNull();
         return clubRepository.findAllClubs(
                 category,
                 type,
@@ -49,7 +49,7 @@ public class ClubService {
                 weeklyActiveFrequency,
                 query,
                 pageable
-        ).map(ClubListRes::of);
+        ).map(club -> ClubListRes.of(club, checkIfLiked(club.getClubId(), userId)));
     }
 
     @Transactional
@@ -103,7 +103,7 @@ public class ClubService {
                 .toList();
 
         return clubs.stream()
-                .map(ClubListRes::of)
+                .map(club -> ClubListRes.of(club, true))
                 .collect(Collectors.toList());
     }
 
