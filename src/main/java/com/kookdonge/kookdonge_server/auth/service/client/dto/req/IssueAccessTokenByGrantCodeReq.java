@@ -1,6 +1,5 @@
 package com.kookdonge.kookdonge_server.auth.service.client.dto.req;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,22 +7,18 @@ import lombok.Getter;
 @Builder(access = lombok.AccessLevel.PRIVATE)
 public class IssueAccessTokenByGrantCodeReq {
     private String code;
-    @JsonProperty("client_id")
-    private String clientId;
-    @JsonProperty("client_secret")
-    private String clientSecret;
-    @JsonProperty("redirect_uri")
-    private String redirectUri;
-    @JsonProperty("grant_type")
-    private String grantType;
+    private String client_id;
+    private String client_secret;
+    private String redirect_uri;
+    private String grant_type;
 
-    public static IssueAccessTokenByGrantCodeReq fromGrantCode(String code, String clientId, String clientSecret, String redirectUri) {
+    public static IssueAccessTokenByGrantCodeReq of(String code, String clientId, String clientSecret, String redirectUri) {
         return IssueAccessTokenByGrantCodeReq.builder()
                 .code(code)
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .redirectUri(redirectUri)
-                .grantType("authorization_code")
+                .client_id(clientId)
+                .client_secret(clientSecret)
+                .redirect_uri(redirectUri)
+                .grant_type("authorization_code")
                 .build();
     }
 }

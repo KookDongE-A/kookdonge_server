@@ -12,6 +12,7 @@ import com.kookdonge.kookdonge_server.auth.service.annotation.LoginRequired;
 import com.kookdonge.kookdonge_server.auth.service.dto.LoginDTO;
 import com.kookdonge.kookdonge_server.auth.service.dto.RegisterUserDTO;
 import com.kookdonge.kookdonge_server.club.presentation.dto.res.ClubListRes;
+import com.kookdonge.kookdonge_server.club.service.ClubService;
 import com.kookdonge.kookdonge_server.common.dto.RequestDTO;
 import com.kookdonge.kookdonge_server.common.dto.ResponseDTO;
 import com.kookdonge.kookdonge_server.common.info.UserInfoStore;
@@ -23,12 +24,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Tag(name="인증/인가")
 @RequiredArgsConstructor
 @RestController
 public class UserPresentation {
 
     private final UserService userService;
+    private final ClubService clubService;
 
     @Operation(summary = "회원가입")
     @PostMapping("/api/users/me")
@@ -65,14 +69,14 @@ public class UserPresentation {
     @Operation(summary = "내가 좋아요 누른 동아리 목록 조회")
     @GetMapping("/api/users/me/liked-clubs")
     @LoginRequired
-    public ResponseDTO<java.util.List<ClubListRes>> getMyLikedClubs() {
+    public ResponseDTO<List<ClubListRes>> getMyLikedClubs() {
         Long userId = UserInfoStore.getUserId();
-        // TODO: 구현 필요 - userService.getLikedClubs(userId) 또는 clubService.getClubsLikedByUser(userId) 메서드 추가
-        return ResponseDTO.ok(java.util.Collections.emptyList());
+        List<ClubListRes> likedClubs = clubService.getClubsLikedByUser(userId);
+        return ResponseDTO.ok(likedClubs);
     }
 
     @PostMapping("/api/auth/reissue")
-    public ResponseDTO<ReissueAccessTokenRes> reissueAccessTokenByRefreshToken(RequestDTO<ReissueAccessTokenReq> request) {
+    public ResponseDTO<ReissueAccessTokenRes> reissueAccessTokenByRefreshToken(@RequestBody RequestDTO<ReissueAccessTokenReq> request) {
         ReissueAccessTokenReq data = request.getData();
         String refreshToken = data.getRefreshToken();
 
@@ -82,7 +86,7 @@ public class UserPresentation {
     }
 
     @PostMapping("/api/auth")
-    public ResponseDTO<LoginRes> loginUser(RequestDTO<LoginReq> request) {
+    public ResponseDTO<LoginRes> loginUser(@RequestBody RequestDTO<LoginReq> request) {
         LoginReq data = request.getData();
         String googleGrantCode = data.getGoogleGrantCode();
 

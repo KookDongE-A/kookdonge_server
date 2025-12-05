@@ -1,6 +1,7 @@
 package com.kookdonge.kookdonge_server.questions_and_answers.presentation;
 
 import com.kookdonge.kookdonge_server.auth.service.annotation.LoginRequired;
+import com.kookdonge.kookdonge_server.common.dto.RequestDTO;
 import com.kookdonge.kookdonge_server.common.dto.ResponseDTO;
 import com.kookdonge.kookdonge_server.questions_and_answers.presentation.dto.req.QuestionCreateReq;
 import com.kookdonge.kookdonge_server.questions_and_answers.presentation.dto.req.AnswerCreateReq;
@@ -30,9 +31,9 @@ public class QuestionAnswerPresentation {
     @PostMapping("/{clubId}/questions")
     public ResponseDTO<QuestionAnswerRes> createQuestion(
             @PathVariable Long clubId,
-            @Valid @RequestBody QuestionCreateReq request
+            @Valid @RequestBody RequestDTO<QuestionCreateReq> request
     ) {
-        QuestionAnswerRes response = questionAnswerService.createQuestion(clubId, request);
+        QuestionAnswerRes response = questionAnswerService.createQuestion(clubId, request.getData());
         return ResponseDTO.ok(response);
     }
 

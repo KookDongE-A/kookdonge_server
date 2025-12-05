@@ -29,4 +29,5 @@ public interface ClubLikeRepository extends JpaRepository<ClubLikeEntity, ClubLi
         Long getClubId();
         Long getLikeCount();
     }
+
 }

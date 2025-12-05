@@ -39,7 +39,8 @@ public class UserService {
 
     public RegisterUserDTO registerUser(String googleGrantCode, String phoneNumber, String department, String studentId){
 
-        IssueAccessTokenByGrantCodeRes issueAccessTokenByGrantCodeRes = googleOAuthClient.issueAccessTokenByGrantCode(IssueAccessTokenByGrantCodeReq.fromGrantCode(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri));
+        IssueAccessTokenByGrantCodeReq req = IssueAccessTokenByGrantCodeReq.of(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri + "/register");
+        IssueAccessTokenByGrantCodeRes issueAccessTokenByGrantCodeRes = googleOAuthClient.issueAccessTokenByGrantCode(req);
         log.debug("issueAccessTokenByGrantCodeRes: {}", issueAccessTokenByGrantCodeRes.getScope());
 
         String googleAccessToken = "Bearer " + issueAccessTokenByGrantCodeRes.getAccessToken();
@@ -80,7 +81,8 @@ public class UserService {
     }
 
     public LoginDTO loginUser(String googleGrantCode){
-        IssueAccessTokenByGrantCodeRes issueAccessTokenByGrantCodeRes = googleOAuthClient.issueAccessTokenByGrantCode(IssueAccessTokenByGrantCodeReq.fromGrantCode(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri));
+        IssueAccessTokenByGrantCodeReq req = IssueAccessTokenByGrantCodeReq.of(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri + "/login");
+        IssueAccessTokenByGrantCodeRes issueAccessTokenByGrantCodeRes = googleOAuthClient.issueAccessTokenByGrantCode(req);
 
         String googleAccessToken = "Bearer " + issueAccessTokenByGrantCodeRes.getAccessToken();
         GetUserInfoRes userInfo = googleClient.getUserInfo(googleAccessToken);

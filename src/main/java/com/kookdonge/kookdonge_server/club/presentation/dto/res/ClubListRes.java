@@ -26,7 +26,7 @@ public class ClubListRes {
     private Long dDay;
     private Boolean isLikedByMe;
 
-    public static ClubListRes of(ClubEntity club) {
+    public static ClubListRes of(ClubEntity club, Boolean isLikedByMe) {
         Long dDay = null;
         if (club.getRecruitmentStatus() == RecruitmentStatus.RECRUITING) {
             dDay = ChronoUnit.DAYS.between(LocalDateTime.now(), club.getRecruitmentEndTime());
@@ -41,7 +41,7 @@ public class ClubListRes {
                 club.getCategory(),
                 club.getRecruitmentStatus(),
                 dDay,
-                false
+                isLikedByMe
         );
     }
 }
