@@ -39,7 +39,7 @@ public class UserService {
 
     public RegisterUserDTO registerUser(String googleGrantCode, String phoneNumber, String department, String studentId){
 
-        IssueAccessTokenByGrantCodeReq req = IssueAccessTokenByGrantCodeReq.of(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri + "/register");
+        IssueAccessTokenByGrantCodeReq req = IssueAccessTokenByGrantCodeReq.of(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri);
         IssueAccessTokenByGrantCodeRes issueAccessTokenByGrantCodeRes = googleOAuthClient.issueAccessTokenByGrantCode(req);
         log.debug("issueAccessTokenByGrantCodeRes: {}", issueAccessTokenByGrantCodeRes.getScope());
 
