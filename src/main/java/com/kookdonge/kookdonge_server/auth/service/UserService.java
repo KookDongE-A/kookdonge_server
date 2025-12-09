@@ -81,7 +81,7 @@ public class UserService {
     }
 
     public LoginDTO loginUser(String googleGrantCode){
-        IssueAccessTokenByGrantCodeReq req = IssueAccessTokenByGrantCodeReq.of(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri + "/login");
+        IssueAccessTokenByGrantCodeReq req = IssueAccessTokenByGrantCodeReq.of(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri);
         IssueAccessTokenByGrantCodeRes issueAccessTokenByGrantCodeRes = googleOAuthClient.issueAccessTokenByGrantCode(req);
 
         String googleAccessToken = "Bearer " + issueAccessTokenByGrantCodeRes.getAccessToken();
