@@ -1,6 +1,7 @@
 package com.kookdonge.kookdonge_server.club.service;
 
 import com.kookdonge.kookdonge_server.club.common.ClubExceptionCode;
+import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubEntity;
 import com.kookdonge.kookdonge_server.club.infra.jpa.entity.ClubLikeEntity;
 import com.kookdonge.kookdonge_server.club.infra.jpa.repository.ClubLikeRepository;
 import com.kookdonge.kookdonge_server.club.infra.jpa.repository.ClubRepository;
@@ -18,27 +19,27 @@ public class ClubLikeService {
 
     @Transactional
     public void addLike(Long clubId, Long userId) {
-        clubRepository.findById(clubId)
+      ClubEntity club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new CustomException(ClubExceptionCode.CLUB_NOT_FOUND));
 
         boolean isLiked = clubLikeRepository.existsByClubLikeId_ClubIdAndClubLikeId_UserId(clubId, userId);
         if (isLiked) {
             return;
         }
-
+        club.increaseLikeCount();
         clubLikeRepository.save(ClubLikeEntity.of(clubId, userId));
     }
 
     @Transactional
     public void removeLike(Long clubId, Long userId) {
-        clubRepository.findById(clubId)
+      ClubEntity club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new CustomException(ClubExceptionCode.CLUB_NOT_FOUND));
 
         boolean isLiked = clubLikeRepository.existsByClubLikeId_ClubIdAndClubLikeId_UserId(clubId, userId);
         if (!isLiked) {
             return;
         }
-
+        club.decreaseLikeCount();
         clubLikeRepository.deleteByClubLikeId_ClubIdAndClubLikeId_UserId(clubId, userId);
     }
 }
