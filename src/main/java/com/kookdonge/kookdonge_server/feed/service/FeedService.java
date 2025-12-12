@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -41,10 +42,6 @@ public class FeedService {
 
     public ClubFeedListDto getFeedList(Long clubId) {
         List<FeedEntity> feedEntityList = feedRepository.findAllByClubIdOrderByCreatedAtDesc(clubId);
-
-        if (feedEntityList.isEmpty()) {
-            throw new CustomException(FeedExceptionCode.CLUB_FEED_NOT_FOUND);
-        }
 
         List<ClubFeedDto> clubFeedList = feedEntityList.stream().map(feedEntity -> {
             List<String> postUrls = feedPostRepository.findAllByFeedId(feedEntity.getFeedId())
