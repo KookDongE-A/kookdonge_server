@@ -29,6 +29,11 @@ public class AuthInterceptor implements HandlerInterceptor {
             @NonNull HttpServletResponse response,
             @NonNull Object handler
     ) {
+        // CORS preflight 요청은 바로 통과
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
         if (!(handler instanceof HandlerMethod handlerMethod)) {
             return true;
         }
