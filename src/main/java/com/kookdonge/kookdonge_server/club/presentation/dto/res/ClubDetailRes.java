@@ -30,6 +30,7 @@ public class ClubDetailRes {
     private Long totalViewCount;
     private Boolean isLikedByMe;
     private String description;
+    private String content;
     private ClubCategory category;
     private Boolean allowLeaveOfAbsence;
 
@@ -50,6 +51,7 @@ public class ClubDetailRes {
                 club.getTotalViewCount(),
                 isLikedByMe,
                 club.getDescription(),
+                club.getContent(),
                 club.getCategory(),
                 club.getIsLeaveOfAbsenceActive()
         );
