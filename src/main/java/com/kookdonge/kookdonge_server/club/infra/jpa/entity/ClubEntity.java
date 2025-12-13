@@ -94,6 +94,10 @@ public class ClubEntity extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Nullable
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
     @NotNull
     @Column(nullable = false)
     @Min(0)
