@@ -36,6 +36,8 @@ public class UserService {
     private String googleClientSecret;
     @Value("${google.client.redirect-uri}")
     private String googleClientRedirectUri;
+    @Value("${google.client.redirect-uri-login}")
+    private String googleClientRedirectUriLogin;
 
     public RegisterUserDTO registerUser(String googleGrantCode, String phoneNumber, String department, String studentId){
 
@@ -81,7 +83,7 @@ public class UserService {
     }
 
     public LoginDTO loginUser(String googleGrantCode){
-        IssueAccessTokenByGrantCodeReq req = IssueAccessTokenByGrantCodeReq.of(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUri);
+        IssueAccessTokenByGrantCodeReq req = IssueAccessTokenByGrantCodeReq.of(googleGrantCode, googleClientId, googleClientSecret, googleClientRedirectUriLogin);
         IssueAccessTokenByGrantCodeRes issueAccessTokenByGrantCodeRes = googleOAuthClient.issueAccessTokenByGrantCode(req);
 
         String googleAccessToken = "Bearer " + issueAccessTokenByGrantCodeRes.getAccessToken();
