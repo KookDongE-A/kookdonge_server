@@ -35,7 +35,7 @@ public class UserPresentation {
     private final ClubService clubService;
 
     @Operation(summary = "회원가입")
-    @PostMapping("/api/users/me")
+    @PostMapping("/register")
     public ResponseDTO<RegisterUserRes> registerUser(@RequestBody RequestDTO<RegisterUserReq> request) {
         RegisterUserReq payload = request.getData();
         String googleGrantCode = payload.getGoogleGrantCode();
